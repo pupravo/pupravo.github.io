@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Разписание · Право I курс</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+
+<header class="site">
+  
+  <h1>Разписание на занятията</h1>
+  <div class="eyebrow-row">Юридически факултет · Първи семестър, специалност Право, Курс I, уч. 2026/2027 г.</div>
+</header>
+
+<div class="filters">
+  <div class="filters-inner">
+    <div class="filter-row">
+      <span class="filter-label">Група</span>
+      <div class="chip-group" id="groupChips"></div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Вид</span>
+      <div class="chip-group" id="typeChips"></div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Предмет</span>
+      <select id="subjectSelect" class="subject-select"></select>
+    </div>
+    <div class="results-count" id="resultsCount"></div>
+  </div>
+</div>
+
+<main id="calendarRoot"></main>
+
+<footer>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:var(--navy)"></span>Лекция</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--rust)"></span>Упражнение</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>Спорт</span>
+  </div>
+</footer>
+
+<script type="text/javascript" src="./data.js"></script>
+<script type="text/javascript" src="./script.js"></script>
+</body>
+</html>
