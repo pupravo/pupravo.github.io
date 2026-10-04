@@ -8,7 +8,8 @@ const EVENTS = [{
     "group": "Всички",
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
-    "note": ""
+    "note": "",
+    "isPassed" : true
 }, {
     "id": 2,
     "date": "2026-10-02",
@@ -19,7 +20,8 @@ const EVENTS = [{
     "group": "Всички",
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
-    "note": ""
+    "note": "",
+    "isPassed" : true
 }, {
     "id": 3,
     "date": "2026-10-03",
@@ -30,7 +32,8 @@ const EVENTS = [{
     "group": "Всички",
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
-    "note": "Съботна лекция"
+    "note": "Съботна лекция",
+    "isPassed" : true
 }, {
     "id": 4,
     "date": "2026-10-05",
