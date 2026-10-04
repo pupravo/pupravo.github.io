@@ -54,23 +54,32 @@ const state = {
 
 function eventMatches(e) {
 
-  if(state.type !== "Всички" && e.type !== state.type) return false;
-  if(state.group !== "Всички" && e.group !== "Всички" && e.group !== state.group) return false;
-  if(state.search){
+  if(state.type   !== "Всички" && e.type  !== state.type) {
+    return false;
+  }
+
+  if(state.group  !== "Всички" && e.group !== "Всички" && e.group !== state.group) {
+    return false;
+  }
+
+  if(state.search) {
+
     const q = state.search.toLowerCase();
     const hay = (e.subject+" "+e.teacher+" "+e.room).toLowerCase();
     if(!hay.includes(q)) return false;
   }
+
   return true;
 }
 
 // ---------- Type tabs ----------
 const typeTabsEl = document.getElementById('typeTabs');
 TYPES.forEach(t=>{
+
   const btn = document.createElement('button');
-  btn.className = 'type-tab' + (t===state.type ? ' active':'');
-  btn.textContent = t;
-  btn.dataset.type = t;
+  btn.className     = 'type-tab' + (t===state.type ? ' active':'');
+  btn.textContent   = t;
+  btn.dataset.type  = t;
   btn.addEventListener('click', ()=>{
     state.type = t;
     [...typeTabsEl.children].forEach(c=>c.classList.toggle('active', c.dataset.type===t));
@@ -81,42 +90,19 @@ TYPES.forEach(t=>{
 
 // ---------- Group select (topbar) ----------
 const groupSelectEl = document.getElementById('groupSelect');
-["Всички","1","2","3","4","5","6"].forEach(g=>{
-  const opt = document.createElement('option');
-  opt.value = g;
+["Всички","1","2","3","4","5","6"].forEach(g => {
+
+  const opt       = document.createElement('option');
+  opt.value       = g;
   opt.textContent = g==="Всички" ? "Всички групи" : "Група "+g;
   groupSelectEl.appendChild(opt);
 });
+
 groupSelectEl.addEventListener('change', ()=>{
   state.group = groupSelectEl.value;
-  //syncGroupPills();
   renderAll();
 });
 
-// ---------- Group pills (right panel) ----------
-// const groupPillsEl = document.getElementById('groupPills');
-// ["Всички","1","2","3","4","5","6"].forEach(g=>{
-//   const btn = document.createElement('button');
-//   btn.className = 'pill' + (g===state.group ? ' active':'');
-//   btn.textContent = g==="Всички" ? "Всички" : g;
-//   btn.dataset.group = g;
-//   btn.addEventListener('click', ()=>{
-//     state.group = g;
-//     groupSelectEl.value = g;
-//     syncGroupPills();
-//     renderAll();
-//   });
-//   groupPillsEl.appendChild(btn);
-// });
-// function syncGroupPills(){
-//   [...groupPillsEl.children].forEach(c=>c.classList.toggle('active', c.dataset.group===state.group));
-// }
-
-// ---------- Search ----------
-// document.getElementById('searchInput').addEventListener('input', (e)=>{
-//   state.search = e.target.value.trim();
-//   renderAll();
-// });
 
 // ---------- View toggle ----------
 const viewToggleEl  = document.getElementById('viewToggle');
@@ -131,13 +117,6 @@ viewToggleEl.addEventListener('click', (e) => {
   if(v === state.view) return;
   state.view = v;
 
-  console.log("@@@@@@@@@@@");
-    console.log(state.view);
-    console.log(viewToggleEl.children);
-    console.log("@@@@@@@@@@@");
-
-
-
   [...viewToggleEl.children].forEach(c=>c.classList.toggle('active', c.dataset.view===v));
   gridWrapEl.style.display = v==='grid' ? 'block' : 'none';
   listWrapEl.style.display = v==='list' ? 'block' : 'none';
@@ -146,18 +125,31 @@ viewToggleEl.addEventListener('click', (e) => {
 
 // ---------- Nav ----------
 document.getElementById('prevBtn').addEventListener('click', ()=>{
-  if(state.view === 'list'){ navigateListMonth(-1); return; }
+
+  if(state.view === 'list') { 
+
+    navigateListMonth(-1); 
+    return; 
+  }
+
   state.month--;
-  if(state.month<0){ state.month=11; state.year--; }
+  if(state.month<0){  
+    state.month=11; 
+    state.year--; 
+  }
   renderAll();
 });
+
 document.getElementById('nextBtn').addEventListener('click', ()=>{
+
   if(state.view === 'list'){ navigateListMonth(1); return; }
   state.month++;
   if(state.month>11){ state.month=0; state.year++; }
   renderAll();
 });
+
 document.getElementById('todayBtn').addEventListener('click', ()=>{
+
   if(state.view === 'list'){
     state.year = REAL_TODAY.getFullYear();
     state.month = REAL_TODAY.getMonth();
@@ -179,7 +171,8 @@ function renderGrid() {
   calTitleEl.textContent = `${MONTH_NAMES[state.month]} ${state.year}`;
   calGridEl.innerHTML = '';
 
-  DOW_FULL.forEach(d=>{
+  DOW_FULL.forEach(d=> {
+
     const cell          = document.createElement('div');
     cell.className      = 'dow-cell';
     cell.textContent    = d.slice(0,3);
@@ -187,8 +180,8 @@ function renderGrid() {
   });
 
   const firstOfMonth = new Date(state.year, state.month, 1);
-  const startOffset = firstOfMonth.getDay(); // 0=Sun
-  const gridStart = new Date(state.year, state.month, 1 - startOffset);
+  const startOffset  = firstOfMonth.getDay(); // 0=Sun
+  const gridStart    = new Date(state.year, state.month, 1 - startOffset);
 
   const totalCells = 42; // 6 weeks
   for(let i=0;i<totalCells;i++) {
@@ -214,10 +207,7 @@ function renderGrid() {
     const dayEvents = (eventsByDate.get(key) || []).filter(eventMatches);
     //const shown = dayEvents.slice(0,3);
     dayEvents.forEach(e=> {
-    //   const chip        = document.createElement('div');
-    //   chip.className    = 'chip type-'+e.type;
-    //   chip.textContent  = `${e.start} ${e.subject}`;
-    //   cell.appendChild(chip);
+
         cell.innerHTML += `
             <div class="chip type-${e.type}" style="display: flex">
                 <div>
@@ -226,15 +216,7 @@ function renderGrid() {
                 </div>
             </div>
         `
-
-
     });
-    // if(dayEvents.length > 3){
-    //   const more = document.createElement('div');
-    //   more.className = 'more-chip';
-    //   more.textContent = `+${dayEvents.length-3} още`;
-    //   cell.appendChild(more);
-    // }
 
     cell.addEventListener('click', ()=> openDayModal(key));
     calGridEl.appendChild(cell);
@@ -243,9 +225,9 @@ function renderGrid() {
 
 
 // ---------- Day modal ----------
-const modalOverlay = document.getElementById('modalOverlay');
-const modalTitle = document.getElementById('modalTitle');
-const modalBody = document.getElementById('modalBody');
+const modalOverlay  = document.getElementById('modalOverlay');
+const modalTitle    = document.getElementById('modalTitle');
+const modalBody     = document.getElementById('modalBody');
 
 function openDayModal(key) {
 
@@ -279,44 +261,11 @@ function openDayModal(key) {
   }
   modalOverlay.classList.add('open');
 }
+
 document.getElementById('modalClose').addEventListener('click', ()=> modalOverlay.classList.remove('open'));
 modalOverlay.addEventListener('click', (e)=>{ if(e.target===modalOverlay) modalOverlay.classList.remove('open'); });
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modalOverlay.classList.remove('open'); });
 
-// ---------- ICS export ----------
-function toICSDate(dateStr, timeStr){
-  const [y,m,d] = dateStr.split('-');
-  const [hh,mm] = timeStr.split(':');
-  return `${y}${m}${d}T${hh}${mm}00`;
-}
-function escapeICS(s){
-  return String(s||'').replace(/([,;])/g,'\\$1');
-}
-// document.getElementById('icsBtn').addEventListener('click', ()=>{
-//   const list = EVENTS.filter(eventMatches);
-//   let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Pravo Raspisanie//BG\r\nCALSCALE:GREGORIAN\r\n';
-//   list.forEach(e=>{
-//     const groupLabel = e.group==="Всички" ? "всички групи" : "гр. "+e.group;
-//     ics += 'BEGIN:VEVENT\r\n';
-//     ics += `UID:${e.id}-${e.date}@raspisanie-pravo\r\n`;
-//     ics += `DTSTART:${toICSDate(e.date, e.start)}\r\n`;
-//     ics += `DTEND:${toICSDate(e.date, e.end)}\r\n`;
-//     ics += `SUMMARY:${escapeICS(e.subject+' ('+e.type+')')}\r\n`;
-//     ics += `DESCRIPTION:${escapeICS(groupLabel + (e.teacher? ', '+e.teacher:''))}\r\n`;
-//     ics += `LOCATION:${escapeICS(e.room)}\r\n`;
-//     ics += 'END:VEVENT\r\n';
-//   });
-//   ics += 'END:VCALENDAR\r\n';
-//   const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
-//   const url = URL.createObjectURL(blob);
-//   const a = document.createElement('a');
-//   a.href = url;
-//   a.download = 'raspisanie-pravo.ics';
-//   document.body.appendChild(a);
-//   a.click();
-//   document.body.removeChild(a);
-//   URL.revokeObjectURL(url);
-// });
 
 // ---------- List (agenda) rendering ----------
 let listMonthKeys = [];
@@ -325,7 +274,10 @@ function renderList() {
 
     listWrapEl.style.display = "block";
 
-  const filtered = EVENTS.filter(eventMatches).slice().sort((a,b)=> (a.date+a.start).localeCompare(b.date+b.start));
+  const filtered = EVENTS.filter(eventMatches).slice().sort((a,b)=> (a.date + a.start).localeCompare(b.date+b.start)).filter((element) => {
+    return element?.isPassed == false || element?.isPassed == undefined
+  });
+
   listWrapEl.innerHTML = '';
 
   if(filtered.length === 0) {
