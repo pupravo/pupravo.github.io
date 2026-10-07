@@ -57,6 +57,7 @@ const EVENTS = [{
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 6,
     "date": "2026-10-06",
@@ -68,6 +69,7 @@ const EVENTS = [{
     "teacher": "докт. Й. Танев",
     "room": "7 с.з.",
     "note": ""
+    ,"isPassed" : true    
 }, {
     "id": 7,
     "date": "2026-10-06",
@@ -79,6 +81,7 @@ const EVENTS = [{
     "teacher": "гл. ас. д-р Д. Ханев",
     "room": "10 с.з.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 8,
     "date": "2026-10-06",
@@ -90,6 +93,7 @@ const EVENTS = [{
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 9,
     "date": "2026-10-06",
@@ -101,6 +105,7 @@ const EVENTS = [{
     "teacher": "гл. ас. д-р Д. Ханев",
     "room": "14 с.з.",
     "note": ""
+    ,"isPassed" : true    
 }, {
     "id": 10,
     "date": "2026-10-06",
@@ -112,6 +117,7 @@ const EVENTS = [{
     "teacher": "",
     "room": "зала Академик",
     "note": "Съвместно с гр. 6"
+    ,"isPassed" : true    
 }, {
     "id": 11,
     "date": "2026-10-06",
@@ -123,6 +129,7 @@ const EVENTS = [{
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
     "note": ""
+    ,"isPassed" : true    
 }, {
     "id": 12,
     "date": "2026-10-06",
@@ -134,6 +141,7 @@ const EVENTS = [{
     "teacher": "",
     "room": "зала Академик",
     "note": "Съвместно с гр. 4"
+    ,"isPassed" : true    
 }, {
     "id": 13,
     "date": "2026-10-06",
@@ -145,6 +153,7 @@ const EVENTS = [{
     "teacher": "",
     "room": "зала Академик",
     "note": "Съвместно с гр. 3"
+    ,"isPassed" : true    
 }, {
     "id": 14,
     "date": "2026-10-06",
@@ -156,6 +165,7 @@ const EVENTS = [{
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
     "note": ""
+    ,"isPassed" : true    
 }, {
     "id": 15,
     "date": "2026-10-06",
@@ -167,6 +177,7 @@ const EVENTS = [{
     "teacher": "",
     "room": "зала Академик",
     "note": "Съвместно с гр. 1"
+    ,"isPassed" : true    
 }, {
     "id": 16,
     "date": "2026-10-06",
@@ -178,6 +189,7 @@ const EVENTS = [{
     "teacher": "д-р К. Илчев",
     "room": "11 ауд.",
     "note": ""
+    ,"isPassed" : true    
 }, {
     "id": 17,
     "date": "2026-10-06",
@@ -189,6 +201,7 @@ const EVENTS = [{
     "teacher": "",
     "room": "зала Академик",
     "note": "Съвместно с гр. 5"
+    ,"isPassed" : true    
 }, {
     "id": 18,
     "date": "2026-10-06",
@@ -200,6 +213,7 @@ const EVENTS = [{
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
     "note": ""
+        ,"isPassed" : true
 }, {
     "id": 19,
     "date": "2026-10-06",
@@ -211,6 +225,7 @@ const EVENTS = [{
     "teacher": "",
     "room": "зала Академик",
     "note": "Съвместно с гр. 2"
+        ,"isPassed" : true
 }, {
     "id": 20,
     "date": "2026-10-06",
@@ -222,6 +237,7 @@ const EVENTS = [{
     "teacher": "д-р К. Илчев",
     "room": "10 ауд.",
     "note": ""
+        ,"isPassed" : true
 }, {
     "id": 21,
     "date": "2026-10-06",
@@ -233,6 +249,7 @@ const EVENTS = [{
     "teacher": "д-р К. Илчев",
     "room": "9 с.з.",
     "note": ""
+        ,"isPassed" : true
 }, {
     "id": 22,
     "date": "2026-10-06",
@@ -244,6 +261,7 @@ const EVENTS = [{
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
     "note": ""
+        ,"isPassed" : true
 }, {
     "id": 23,
     "date": "2026-10-07",
