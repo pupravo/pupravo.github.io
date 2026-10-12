@@ -369,6 +369,7 @@ const EVENTS = [{
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 32,
     "date": "2026-10-09",
@@ -380,6 +381,7 @@ const EVENTS = [{
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 33,
     "date": "2026-10-12",
