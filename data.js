@@ -129,7 +129,7 @@ const EVENTS = [{
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
     "note": ""
-    ,"isPassed" : true    
+    ,"isPassed" : true
 }, {
     "id": 12,
     "date": "2026-10-06",
@@ -393,6 +393,7 @@ const EVENTS = [{
     "teacher": "доц. д-р П. Неделева, доц. д-р Д. Стоянкова",
     "room": "6 ауд.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 34,
     "date": "2026-10-13",
