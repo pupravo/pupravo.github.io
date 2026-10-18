@@ -693,7 +693,7 @@ const EVENTS = [{
     "teacher": "доц. д-р Д. Ханев",
     "room": "8 ауд.",
     "note": ""
-    
+    ,"isPassed" : true
 }, {
     "id": 59,
     "date": "2026-10-15",
@@ -705,6 +705,7 @@ const EVENTS = [{
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "9 ауд.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 60,
     "date": "2026-10-16",
@@ -716,6 +717,7 @@ const EVENTS = [{
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 61,
     "date": "2026-10-16",
@@ -727,6 +729,7 @@ const EVENTS = [{
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
     "note": ""
+    ,"isPassed" : true
 }, {
     "id": 62,
     "date": "2026-10-19",
