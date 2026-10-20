@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Римско право – статуси и правоспособност</title>
+<style>
+:root{--bg:#eceef2;--pn:#fff;--ink:#1b2030;--mut:#5b6377;--ac:#5e1b45;--acs:#f1e3ec;--ln:#d5d9e2;--y:#1f6f4a;--l:#9a6200;--n:#8a2b2b;--ys:#e2f1ea;--ls:#f8ecd6;--ns:#f5e0e0;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161d;--pn:#1d2029;--ink:#e8eaf0;--mut:#9aa2b6;--ac:#d68fba;--acs:#34202c;--ln:#323747;--y:#6fcf9f;--l:#e0b25a;--n:#e58a8a;--ys:#1b2e25;--ls:#33290f;--ns:#35201f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14161d;--pn:#1d2029;--ink:#e8eaf0;--mut:#9aa2b6;--ac:#d68fba;--acs:#34202c;--ln:#323747;--y:#6fcf9f;--l:#e0b25a;--n:#e58a8a;--ys:#1b2e25;--ls:#33290f;--ns:#35201f;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Spectral,Georgia,"Times New Roman",serif}
+.app{display:grid;grid-template-columns:250px minmax(0,1fr) 220px;gap:20px;max-width:1380px;margin:0 auto;padding:20px}
+aside{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:16px;align-self:start;position:sticky;top:20px}
+aside h2{font-size:15px;margin:14px 0 6px;color:var(--mut);font-weight:600}aside h2:first-child{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips.eq{display:grid;grid-template-columns:1fr;gap:6px}.chips.two{grid-template-columns:1fr 1fr}.at{font-size:18px;font-weight:600;color:var(--ac);padding-bottom:8px;border-bottom:1px solid var(--ln)}
+button.c{font:inherit;font-size:14px;border:1px solid var(--ln);background:transparent;color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer}
+button.c i{display:block;font-size:12px;color:var(--mut)}
+.eq button.c{display:flex;justify-content:space-between;align-items:baseline;gap:8px;width:100%;text-align:left}.eq button.c i{display:inline;text-align:right}
+button.c.on{background:var(--ac);border-color:var(--ac);color:#fff}button.c.on i{color:inherit;opacity:.85}
+button.c:disabled{opacity:.35;cursor:not-allowed}
+button.c:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.pre{margin-top:14px;padding-top:12px;border-top:1px solid var(--ln)}
+main h1{font-size:30px;line-height:1.2;margin:0 0 4px;color:var(--ac)}
+.sub{color:var(--mut);margin:0 0 16px}
+.warn{background:var(--acs);border-left:3px solid var(--ac);padding:8px 12px;border-radius:4px;margin:0 0 16px;font-size:15px}
+h3{font-size:19px;margin:22px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.cap{background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:10px 12px;border-left-width:5px}
+.cap.y{border-left-color:var(--y)}.cap.l{border-left-color:var(--l)}.cap.n{border-left-color:var(--n)}
+.cap b{font-size:16px}.cap em{display:block;font-size:13px;color:var(--mut);font-style:normal}
+.cap p{margin:6px 0 0;font-size:14px}
+.tag{float:right;font-size:12px;padding:1px 8px;border-radius:10px;font-weight:600}
+.y .tag{background:var(--ys);color:var(--y)}.l .tag{background:var(--ls);color:var(--l)}.n .tag{background:var(--ns);color:var(--n)}
+ul.t{margin:0;padding-left:20px}ul.t li{margin:5px 0}
+.box{background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:8px 14px}
+@media(max-width:1100px){.app{grid-template-columns:1fr;padding:12px}aside{position:static}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside id="ctl"></aside>
+<main id="out"></main>
+<aside id="pre"></aside>
+</div>
+<script>
+const GROUPS = {
+  lib: ['Status libertatis – свобода', {ingenuus:['Ingenuus','свободнороден'], libertus:['Libertus','освободен роб'], servus:['Servus','роб']}],
+  civ: ['Status civitatis – гражданство', {civis:['Civis Romanus','римски гражданин'], latinus:['Latinus','латинин'], peregrinus:['Peregrinus','чужденец'], dediticius:['Dediticius','чужденец-предал се']}],
+  fam: ['Status familiae – семейство', {sui:['Sui iuris','самостоятелен'], alieni:['Alieni iuris','подвластен'], manu:['In manu','под manus (жена)'], mancipio:['In mancipio','под mancipium']}],
+  sex: ['Пол', {m:['Vir','мъж'], f:['Mulier','жена']}]
+};
+const PRESETS = {
+  'Pater familias': {lib:'ingenuus', civ:'civis', fam:'sui', sex:'m'},
+  'Filius familias': {lib:'ingenuus', civ:'civis', fam:'alieni', sex:'m'},
+  'Filia familias': {lib:'ingenuus', civ:'civis', fam:'alieni', sex:'f'},
+  'Mulier sui iuris': {lib:'ingenuus', civ:'civis', fam:'sui', sex:'f'},
+  'Uxor in manu': {lib:'ingenuus', civ:'civis', fam:'manu', sex:'f'},
+  'Libertus civis': {lib:'libertus', civ:'civis', fam:'sui', sex:'m'},
+  'Latinus Iunianus': {lib:'libertus', civ:'latinus', fam:'sui', sex:'m'},
+  'Peregrinus': {lib:'ingenuus', civ:'peregrinus', fam:'sui', sex:'m'},
+  'Servus': {lib:'servus', civ:'civis', fam:'sui', sex:'m'}
+};
+const CAPS = [
+  ['suffragii','ius suffragii','право на глас в комициите'],
+  ['honorum','ius honorum','право да заема магистратури'],
+  ['commercium','ius commercii','право на собственост и сделки по ius civile'],
+  ['conubium','ius conubii','право на iustae nuptiae (законен брак)'],
+  ['patria','patria potestas','власт над децата'],
+  ['testActiva','testamenti factio activa','право да прави завещание'],
+  ['testPassiva','testamenti factio passiva','право да наследява по завещание'],
+  ['actio','ius actionis','право на иск пред съда']
+];
+const LABEL = {y:'да', l:'ограничено', n:'не'};
+const CD = 'Загубата на статус е <i>capitis deminutio</i>: <i>maxima</i> (на свободата), <i>media</i> (на гражданството), <i>minima</i> (на семейния статус). Всяка води до загуба на правоспособност и уреждане на задълженията (напр. <i>adrogatio</i> и <i>emancipatio</i> са <i>minima</i>).';
+
+function norm(s) {
+  const n = Object.assign({}, s);
+  if (n.civ !== 'civis') n.fam = 'sui';
+  if (n.sex === 'm' && n.fam === 'manu') n.fam = 'sui';
+  return n;
+}
+
+function caps(s) {
+  const c = {}, set = (k, v, t) => { c[k] = [v, t || '']; };
+  if (s.lib === 'servus') {
+    set('suffragii','n','Няма <i>caput</i> – не е субект, а <i>res</i>.');
+    set('honorum','n');
+    set('commercium','n','Придобива за господаря; <i>peculium</i> е фактическо.');
+    set('conubium','n','Само фактическо <i>contubernium</i>.');
+    set('patria','n');
+    set('testActiva','n');
+    set('testPassiva','l','Може да е назначен за наследник – придобива за господаря с негово нареждане.');
+    set('actio','n','Действа чрез господаря; срещу него – <i>actio noxalis</i>.');
+    return c;
+  }
+  const civ = s.civ, f = s.sex === 'f', lb = s.lib === 'libertus', ci = civ === 'civis';
+  set('suffragii', ci && !f ? (lb ? 'l' : 'y') : 'n', ci && !f ? (lb ? 'Освободените са вписани само в градските трибуси.' : 'Пълнолетен мъж-гражданин.') : (f && ci ? 'Жените нямат политически права.' : 'Само граждани.'));
+  set('honorum', ci && !f && !lb ? 'y' : 'n', lb ? 'Освободените са изключени от магистратури.' : (ci && !f ? '' : 'Само граждани-мъже.'));
+  let cm = 'n', cmt = 'Само <i>ius gentium</i>: без <i>mancipatio</i>/<i>in iure cessio</i>, <i>traditio</i> за <i>res nec mancipi</i>.';
+  if (civ === 'latinus') { cm = 'y'; cmt = 'Latini имат <i>commercium</i> (Iuniani – ограничено при смърт).'; }
+  if (civ === 'dediticius') { cm = 'n'; cmt = 'Без права по римско право.'; }
+  if (ci) {
+    cm = 'y'; cmt = '';
+    if (s.fam === 'alieni') { cm = 'l'; cmt = 'Придобива за <i>pater familias</i>; само <i>peculium</i>.'; }
+    if (s.fam === 'manu') { cm = 'l'; cmt = 'Имуществото преминава към съпруга.'; }
+    if (s.fam === 'mancipio') { cm = 'l'; cmt = 'Придобива за <i>mancipator</i>-а.'; }
+    if (s.fam === 'sui' && f) { cm = 'l'; cmt = '<i>Auctoritas tutoris</i> за <i>res mancipi</i> и поемане на задължения.'; }
+  }
+  set('commercium', cm, cmt);
+  let cn = ci ? 'y' : (civ === 'latinus' ? 'l' : 'n'), cnt = civ === 'latinus' ? 'Само по изрично предоставяне.' : (ci ? '' : 'Бракът следва местния закон; без <i>patria potestas</i>.');
+  if (ci && s.fam === 'alieni') { cn = 'l'; cnt = 'Нужно е съгласие на <i>pater familias</i> (<i>iussum</i>).'; }
+  if (ci && s.fam === 'mancipio') { cn = 'l'; cnt = 'Ограничено – лицето е в състояние, близко до робството.'; }
+  set('conubium', cn, cnt);
+  set('patria', ci && !f && s.fam === 'sui' ? 'y' : 'n', ci && !f && s.fam === 'sui' ? 'Само над <i>liberi iusti</i> (от законен брак).' : (f ? 'Жените нямат <i>patria potestas</i>; могат да са <i>mater familias</i> само по име.' : 'Няма самостоятелност, която да упражнява.'));
+  let ta = ci && s.fam === 'sui' ? (f ? 'l' : 'y') : 'n', tat = f && ci && s.fam === 'sui' ? 'Нужна е <i>auctoritas tutoris</i>.' : '';
+  if (ci && s.fam === 'alieni') { ta = 'l'; tat = 'Само за <i>peculium castrense</i>.'; }
+  if (civ === 'latinus') { ta = lb ? 'n' : 'l'; tat = lb ? '<i>Lex Iunia</i>: умира като роб – имуществото на патрона.' : 'Ограничено.'; }
+  if (!ci && civ !== 'latinus') tat = 'Ползва се собственият му закон.';
+  set('testActiva', ta, tat);
+  set('testPassiva', ci ? 'y' : (civ === 'latinus' ? 'l' : 'n'), ci && s.fam !== 'sui' ? 'Придобитото отива при носителя на властта.' : '');
+  let ac = ci || civ === 'latinus' ? 'y' : (civ === 'peregrinus' ? 'l' : 'n'), act = civ === 'peregrinus' ? 'Формулярен процес с <i>fictio civitatis</i>.' : '';
+  if (ci && s.fam === 'alieni') { ac = 'l'; act = 'За собствени права (напр. <i>iniuria</i>); иначе – чрез <i>pater familias</i>.'; }
+  if (lb) { ac = 'l'; act = 'Срещу патрона – само с разрешение на претора (<i>in ius vocatio</i>).'; }
+  set('actio', ac, act);
+  return c;
+}
+
+function things(s) {
+  if (s.lib === 'servus') return ['Сам е <i>res mancipi</i>; обект на собственост (<i>dominium</i>).', 'Всичко придобито отива при господаря (<i>adquisitio per servum</i>).', '<i>Peculium</i> – обособено имущество, управлявано фактически, юридически на господаря.'];
+  const L = ['<i>Dominium ex iure Quiritium</i> – само <i>cives</i> (и Latini с <i>commercium</i>).'];
+  if (s.civ === 'civis') L.push('<i>Res mancipi</i> (италийска земя, роби, теглителен добитък, рустикални сервитути): <i>mancipatio</i>, <i>in iure cessio</i>, <i>usucapio</i>. <i>Res nec mancipi</i>: <i>traditio</i>.');
+  else L.push('<i>Res mancipi</i> не се придобиват по <i>ius civile</i> – лицето има <i>in bonis</i> (бонитарна собственост) или се защитава с претора.');
+  if (s.fam === 'alieni') L.push('Не е собственик: придобитото принадлежи на <i>pater familias</i>; има <i>peculium profecticium</i>, <i>castrense</i>, <i>quasi castrense</i>.');
+  if (s.fam === 'manu') L.push('<i>Conventio in manum</i> прехвърля имуществото ѝ на съпруга (<i>universal succession</i>).');
+  if (s.fam === 'mancipio') L.push('Свободен е, но придобива за <i>mancipator</i>-а; освобождава се с <i>manumissio</i>.');
+  if (s.lib === 'libertus') L.push('При смърт без завещание патронът има права върху наследството (<i>bona libertorum</i>).');
+  return L;
+}
+
+function duties(s) {
+  if (s.lib === 'servus') return ['Не поема валидни облигации по <i>ius civile</i> (само <i>obligatio naturalis</i>).', 'За деликти отговаря господарят чрез <i>actio noxalis</i> – или предава роба (<i>noxae deditio</i>).', 'Господарят отговаря по <i>actiones adiecticiae qualitatis</i>: <i>de peculio</i>, <i>quod iussu</i>, <i>institoria</i>, <i>exercitoria</i>.'];
+  const L = [];
+  if (s.lib === 'libertus') L.push('Към патрона: <i>obsequium</i> (почит), <i>officium</i>, <i>operae</i> (услуги по поети задължения).');
+  if (s.fam === 'alieni') L.push('Задължава се сам и отговаря лично, но <i>pater familias</i> отговаря само <i>de peculio</i> или <i>quod iussu</i>. <i>SC Macedonianum</i> забранява заемите на <i>filius familias</i>.');
+  if (s.sex === 'f' && s.civ === 'civis' && s.fam === 'sui') L.push('Поема задължения само с <i>auctoritas tutoris</i> (<i>tutela mulierum</i>).');
+  if (s.civ === 'peregrinus' || s.civ === 'dediticius') L.push('Консенсуалните договори (<i>emptio venditio</i>, <i>locatio conductio</i>) са достъпни по <i>ius gentium</i>; <i>stipulatio</i> с <i>spondesne</i> – само за граждани.');
+  if (s.fam === 'sui' && s.sex === 'm' && s.civ === 'civis') L.push('Пълна дееспособност в рамките на възрастта (<i>pubertas</i>, <i>cura minorum</i> до 25 г.). Отговаря за подвластните си по <i>noxae</i> и <i>peculium</i>.');
+  if (!L.length) L.push('Обичайни задължения по <i>ius civile</i>/<i>ius gentium</i> според вида сделка.');
+  return L;
+}
+
+function obligations(s) {
+  const L = ['Източници (<i>causae obligationum</i>): <i>contractus</i>, <i>delictum</i>, <i>variae causarum figurae</i> (<i>quasi ex contractu / ex delicto</i>).'];
+  if (s.lib === 'servus') return L.concat(duties(s));
+  L.push('Договорни типове: <i>re</i> (<i>mutuum, commodatum, depositum, pignus</i>), <i>verbis</i> (<i>stipulatio</i>), <i>litteris</i>, <i>consensu</i> (<i>emptio venditio, locatio conductio, societas, mandatum</i>).');
+  L.push('Деликти (<i>furtum, rapina, iniuria, damnum iniuria datum</i>): лична отговорност с <i>actio poenalis</i>; за подвластен – <i>actio noxalis</i> срещу носителя на властта.');
+  return L.concat(duties(s));
+}
+
+function inheritance(s) {
+  if (s.lib === 'servus') return ['Не оставя наследство – няма имущество; <i>peculium</i> остава на господаря.', 'Може да бъде назначен за наследник: със свобода става <i>heres necessarius</i>, а без свобода придобива наследството за господаря.'];
+  if (s.civ === 'dediticius') return ['Няма <i>testamenti factio</i> – нито завещава, нито наследява по римското право.'];
+  if (s.civ === 'peregrinus') return ['Не наследява и не завещава по <i>ius civile</i> – ползва се собственият му закон.', 'Може да получи полза чрез <i>fideicommissum</i>.'];
+  if (s.civ === 'latinus') return [s.lib === 'libertus' ? '<i>Latinus Iunianus</i> умира като роб – имуществото отива при патрона като <i>peculium</i> (<i>Lex Iunia</i>).' : 'Ограничена <i>testamenti factio</i> – зависи от вида латинско право.'];
+  const L = [];
+  if (s.fam === 'alieni') L.push('Няма собствено наследство (изключение – <i>peculium castrense</i>). При смъртта на <i>pater familias</i> става <i>sui iuris</i> и <i>suus heres</i>.');
+  if (s.fam === 'manu') L.push('Като <i>filia</i> на съпруга е негов <i>suus heres</i> (<i>loco filiae</i>); имуществото ѝ е слято с неговото.');
+  if (s.fam === 'mancipio') L.push('Придобитото отива при <i>mancipator</i>-а.');
+  if (s.fam === 'sui' && s.sex === 'm') L.push('Завещава (<i>per aes et libram</i>); <i>sui heredes</i> трябва да са назначени или лишени от наследство (<i>exheredatio</i>), иначе завещанието е нищожно. <i>Querela inofficiosi testamenti</i> защитава близките.');
+  if (s.fam === 'sui' && s.sex === 'f') L.push('Завещава с <i>auctoritas tutoris</i>; няма <i>sui heredes</i> – децата ѝ наследяват по <i>SC Orfitianum</i>, а тя наследява децата си по <i>SC Tertullianum</i> (с <i>ius liberorum</i>).');
+  if (s.lib === 'libertus') L.push('Без <i>sui heredes</i> патронът е законен наследник; срещу завещание претора дава <i>bonorum possessio contra tabulas</i> за половината.');
+  L.push('Законен ред (<i>successio ab intestato</i>): <i>sui heredes</i> → <i>adgnati</i> → <i>gentiles</i>; по преторското право: <i>unde liberi, unde legitimi, unde cognati, unde vir et uxor</i>.');
+  L.push('Принципи: универсално правоприемство (права и дългове), <i>semel heres semper heres</i>, <i>nemo pro parte testatus pro parte intestatus decedere potest</i>.');
+  return L;
+}
+
+function esc(s) { return String(s).replace(/</g, '&lt;'); }
+
+function ctl(s) {
+  let h = '<div class="at">Статуси</div>';
+  for (const g in GROUPS) {
+    h += '<h2>' + GROUPS[g][0] + '</h2><div class="chips eq' + (g === 'sex' ? ' two' : '') + '">';
+    for (const k in GROUPS[g][1]) {
+      const d = (s.lib === 'servus' && (g === 'civ' || g === 'fam')) || (g === 'fam' && s.civ !== 'civis' && k !== 'sui') || (g === 'fam' && k === 'manu' && s.sex === 'm');
+      h += '<button class="c' + (s[g] === k ? ' on' : '') + '"' + (d ? ' disabled' : '') + ' data-g="' + g + '" data-v="' + k + '">' + GROUPS[g][1][k][0] + '<i>' + GROUPS[g][1][k][1] + '</i></button>';
+    }
+    h += '</div>';
+  }
+  return h;
+}
+
+function pre(s) {
+  let h = '<div class="at">Комбинации</div><h2>Бързи примери</h2><div class="chips eq">';
+  for (const p in PRESETS) h += '<button class="c' + (Object.keys(s).every(k => PRESETS[p][k] === s[k]) ? ' on' : '') + '" data-p="' + esc(p) + '">' + p + '</button>';
+  return h + '</div>';
+}
+
+const sec = (t, L) => '<h3>' + t + '</h3><div class="box"><ul class="t">' + L.map(x => '<li>' + x + '</li>').join('') + '</ul></div>';
+
+function out(s) {
+  const t = s.lib === 'servus' ? 'Servus' : [GROUPS.lib[1][s.lib][0], GROUPS.civ[1][s.civ][0], GROUPS.fam[1][s.fam][0]].join(' · ');
+  const sub = s.lib === 'servus' ? 'роб – без правен субектност; <i>servus nullum caput habet</i>' : GROUPS.lib[1][s.lib][1] + ', ' + GROUPS.civ[1][s.civ][1] + ', ' + GROUPS.fam[1][s.fam][1] + ', ' + GROUPS.sex[1][s.sex][1];
+  const c = caps(s);
+  let h = '<h1>' + t + '</h1><p class="sub">' + sub + '</p>';
+  if (s.civ !== 'civis' && s.lib !== 'servus') h += '<p class="warn">Римските семейни статуси (<i>sui/alieni iuris</i>) важат само за граждани.</p>';
+  h += '<h3>Правоспособност (<i>capacitas</i>)</h3><div class="grid">';
+  CAPS.forEach(x => { const r = c[x[0]]; h += '<div class="cap ' + r[0] + '"><span class="tag">' + LABEL[r[0]] + '</span><b>' + x[1] + '</b><em>' + x[2] + '</em>' + (r[1] ? '<p>' + r[1] + '</p>' : '') + '</div>'; });
+  h += '</div><h3>Отношение към вещите (<i>res</i>)</h3><div class="box"><ul class="t">' + things(s).map(x => '<li>' + x + '</li>').join('') + '</ul></div>';
+  h += sec('Облигационно право (<i>ius obligationum</i>)', obligations(s));
+  h += sec('Наследяване (<i>hereditas</i>)', inheritance(s));
+  return h + '<h3>Промяна на статуса</h3><div class="box"><p>' + CD + '</p></div>';
+}
+
+let state = Object.assign({}, PRESETS['Pater familias']);
+function render() { state = norm(state); document.getElementById('ctl').innerHTML = ctl(state); document.getElementById('pre').innerHTML = pre(state); document.getElementById('out').innerHTML = out(state); }
+document.querySelectorAll('aside').forEach(a => a.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || b.disabled) return;
+  if (b.dataset.p) state = Object.assign({}, PRESETS[b.dataset.p]); else state[b.dataset.g] = b.dataset.v;
+  render();
+}));
+render();
+</script>
+</body>
+</html>
