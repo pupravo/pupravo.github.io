@@ -55,17 +55,34 @@ button,input,select{font:inherit;color:inherit}
   max-width     : 1680px;
   margin        : 24px auto;
   background    : var(--card);
-  border-radius : 20px;
+  border-radius : 5px;
   padding       : 36px 40px 40px;
   box-shadow    : var(--shadow);
 }
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
-.theme{
-  appearance:none;display:inline-flex;align-items:center;gap:8px;flex:none;
-  height:44px;padding:0 14px;border:1px solid var(--bd);border-radius:10px;
-  background:var(--card);box-shadow:var(--shadow);cursor:pointer;
-  font-weight:600;color:var(--fg);white-space:nowrap;
+.top              {
+  display         : flex;
+  justify-content : space-between;
+  align-items     : flex-start;
+  gap             : 16px
 }
+.theme{
+  appearance:none;
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  height:44px;
+  padding:0 14px;
+  border:1px solid var(--bd);
+  border-radius:10px;
+  background:var(--card);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  font-weight:600;
+  color:var(--fg);
+  white-space:nowrap;
+}
+
 .theme:hover{border-color:var(--box)}
 .theme svg{color:var(--mu)}
 h1{font-weight:800;font-size:34px;line-height:1.15;letter-spacing:-.02em;margin:0}
