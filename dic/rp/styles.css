@@ -1,0 +1,303 @@
+/* ===== Речник по римско право — стилове ===== */
+
+:root{
+  --page:#e8edf1;--card:#ffffff;--fg:#14272b;--mu:#5d6d76;--bd:#e2e8ed;
+  --th:#eff4f8;--row:#f7fafc;
+  --ac:#1c5ce6;--acs:#e8efff;--acb:#c9d9fb;
+  --ink:#101d22;--ink-fg:#ffffff;
+  --pill:#eaf0f4;--pill-fg:#42525c;--lat:#ff0000;--box:#c4cfd6;
+  --shadow:0 1px 2px rgba(16,29,34,.06),0 1px 3px rgba(16,29,34,.05);
+  --pop:0 14px 36px rgba(16,29,34,.18);
+
+  /* палитра на таговете: фон / текст / контур */
+  --t0b:#fde8ee;--t0f:#c2194f;--t0c:#f8c9d7;
+  --t1b:#f1e6fd;--t1f:#7b24c9;--t1c:#e0c9f7;
+  --t2b:#e0f2fb;--t2f:#0a75a8;--t2c:#bfe3f5;
+  --t3b:#d9f7ee;--t3f:#0b8060;--t3c:#b3ecd8;
+  --t4b:#eaf6d0;--t4f:#557a0b;--t4c:#d4e8a3;
+  --t5b:#fbe6f8;--t5f:#b0179a;--t5c:#f1c5ea;
+  --t6b:#fdf3c8;--t6f:#a6780a;--t6c:#f2e08c;
+  --t7b:#fde9d3;--t7f:#c2540a;--t7c:#f6d1a6;
+
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --page:#0e1012;--card:#17191c;--fg:#eaeef0;--mu:#98a4ab;--bd:#2b3136;
+  --th:#1f252a;--row:#1c2024;
+  --ac:#7aa5ff;--acs:#1e2a44;--acb:#2e4274;
+  --ink:#eaeef0;--ink-fg:#101417;
+  --pill:#262c31;--pill-fg:#b4c0c7;--lat:#8fb4ff;--box:#4a545b;
+  --shadow:none;--pop:0 14px 36px rgba(0,0,0,.55);
+  --t0b:#3a1a25;--t0f:#ff8fb0;--t0c:#5a2538;
+  --t1b:#2e1d44;--t1f:#c79bff;--t1c:#47306a;
+  --t2b:#14303c;--t2f:#6cc8f2;--t2c:#1f4a5e;
+  --t3b:#123329;--t3f:#5fdbb0;--t3c:#1b5240;
+  --t4b:#2a3314;--t4f:#b5dc5c;--t4c:#3f4e1d;
+  --t5b:#391a35;--t5f:#f08ae0;--t5c:#582a52;
+  --t6b:#38300f;--t6f:#f0cc55;--t6c:#55481a;
+  --t7b:#3a2412;--t7f:#ffa766;--t7c:#5a381b;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;background:var(--page);color:var(--fg);
+  font:14.5px/1.5 "Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+
+/* ===== Страница ===== */
+.page           {
+  max-width     : 1680px;
+  margin        : 24px auto;
+  background    : var(--card);
+  border-radius : 20px;
+  padding       : 36px 40px 40px;
+  box-shadow    : var(--shadow);
+}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.theme{
+  appearance:none;display:inline-flex;align-items:center;gap:8px;flex:none;
+  height:44px;padding:0 14px;border:1px solid var(--bd);border-radius:10px;
+  background:var(--card);box-shadow:var(--shadow);cursor:pointer;
+  font-weight:600;color:var(--fg);white-space:nowrap;
+}
+.theme:hover{border-color:var(--box)}
+.theme svg{color:var(--mu)}
+h1{font-weight:800;font-size:34px;line-height:1.15;letter-spacing:-.02em;margin:0}
+.lead{color:var(--mu);font-size:16px;margin:6px 0 28px}
+
+/* ===== Табове (раздели) ===== */
+.tabs             {
+  display         : flex;
+  gap             : 6px;
+  border-bottom   : 1px solid var(--bd);
+  margin-bottom   : 18px;
+}
+.tab{
+  appearance:none;background:none;border:0;padding:12px 14px;
+  font-weight:600;font-size:15px;color:var(--mu);cursor:pointer;
+  position:relative;white-space:nowrap;
+}
+.tab:hover{color:var(--fg)}
+.tab[aria-selected="true"]{color:var(--fg);font-weight:700}
+.tab[aria-selected="true"]::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink);
+}
+
+/* ===== Лента с филтри ===== */
+.toolbar          {
+  display         : flex;
+  flex-wrap       : wrap;
+  gap             : 10px;
+  align-items     : center;
+  margin-bottom   : 16px;
+  justify-content : space-between;
+}
+.search{position:relative;flex:1 1 280px;max-width:400px}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--mu);pointer-events:none}
+.search input{
+  width:100%;height:44px;padding:0 14px 0 40px;border:1px solid var(--bd);border-radius:5px;
+  background:var(--card);box-shadow:var(--shadow);
+}
+.search input::placeholder{color:var(--mu)}
+
+.chip{
+  position:relative;display:inline-flex;align-items:center;min-height:44px;
+  border:1px solid var(--bd);border-radius:5px;background:var(--card);box-shadow:var(--shadow);
+}
+.chip-main{
+  display:flex;align-items:center;gap:8px;height:42px;padding:0 12px;
+  background:none;border:0;cursor:pointer;
+}
+.chip-l{color:var(--mu)}
+.chip-v{font-weight:700}
+.count{
+  display:inline-grid;place-items:center;min-width:26px;height:24px;padding:0 6px;
+  border-radius:5px;background:var(--acs);border:1px solid var(--acb);
+  color:var(--ac);font-weight:800;font-size:13px;
+}
+.chip svg{flex:none;color:var(--mu)}
+.chip-x{
+  appearance:none;background:none;border:0;cursor:pointer;display:grid;place-items:center;
+  width:32px;height:42px;padding:0;margin-right:4px;color:var(--mu);
+}
+.chip-x:hover{color:var(--fg)}
+.chip-x[hidden]{display:none}
+
+.chip-v.trunc{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* меню „Категория“ – единичен избор */
+.menu.wide{width:370px}
+.cgroup{padding:12px 8px 4px}
+.copt{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  padding:9px 8px;border:0;background:none;border-radius:8px;cursor:pointer;font-weight:500;
+}
+.copt:hover{background:var(--row)}
+.radio{
+  width:20px;height:20px;flex:none;border-radius:50%;
+  border:1.5px solid var(--box);background:var(--card);display:grid;place-items:center;
+}
+.copt[aria-selected="true"]{background:var(--acs);font-weight:700}
+.copt[aria-selected="true"] .radio{border-color:var(--ac)}
+.copt[aria-selected="true"] .radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--ac)}
+
+.reset          {
+  appearance    : none;
+  background    : none;
+  height        : 44px;
+  padding       : 0 16px;
+  cursor        : pointer;
+  border        : 1px dashed var(--box);
+  border-radius : 5px;
+  color         : var(--mu);
+  font-weight   : 600;
+  margin-right  : 16px;
+}
+.reset:hover{color:var(--fg);border-color:var(--mu)}
+.reset[hidden]{display:none}
+
+/* ===== Падащо меню с множествен избор ===== */
+.menu{
+  position:absolute;top:calc(100% + 8px);left:0;z-index:30;width:310px;max-height:440px;
+  display:flex;flex-direction:column;background:var(--card);border:1px solid var(--bd);
+  border-radius:12px;box-shadow:var(--pop);padding:8px;
+}
+.menu[hidden]{display:none}
+.menu-list{overflow:auto;padding:2px 2px 4px}
+.opt{display:flex;align-items:center;gap:12px;padding:5px 6px;border-radius:8px;cursor:pointer;position:relative}
+.opt:hover{background:var(--row)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.box{
+  width:22px;height:22px;flex:none;display:grid;place-items:center;border-radius:6px;
+  border:1.5px solid var(--box);background:var(--card);color:#fff;padding:0;
+}
+.box svg{opacity:0}
+.opt input:checked+.box{background:var(--ac);border-color:var(--ac)}
+.opt input:checked+.box svg{opacity:1}
+.opt input:focus-visible+.box{outline:2px solid var(--ac);outline-offset:2px}
+.menu-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--bd);margin-top:6px;padding:12px 8px 6px;font-weight:700;
+}
+.box.all{cursor:pointer;color:var(--mu)}
+.box.all[data-s="all"]{background:var(--ac);border-color:var(--ac);color:#fff}
+.box.all[data-s="all"] svg,.box.all[data-s="some"] svg{opacity:1}
+
+/* ===== Таблица ===== */
+.card{border:1px solid var(--bd);overflow:hidden;box-shadow:var(--shadow);background:var(--card)}
+.scroll{overflow-x:auto}
+
+table{width:100%;min-width:1040px;border-collapse:collapse}
+thead th{
+  background:var(--th);text-align:left;height:54px;padding:0 16px;
+  font-weight:700;font-size:13.5px;white-space:nowrap;
+}
+
+th .sort{
+  appearance:none;background:none;border:0;padding:0;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;font-weight:700;
+}
+th .sort svg{color:var(--mu)}
+th.sorted .sort svg{color:var(--fg)}
+td{padding:16px;border-top:1px solid var(--bd);vertical-align:top}
+tbody tr:first-child td{border-top:0}
+tbody tr:hover{background:var(--row)}
+
+.term{font-weight:700}
+.lat{
+  font-weight: bold;
+  color:var(--lat)
+}
+.none{color:var(--mu)}
+
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{
+  appearance:none;cursor:pointer;white-space:nowrap;
+  border:1px solid var(--tc);background:var(--tb);color:var(--tf);
+  font-weight:700;font-size:11.5px;line-height:1;letter-spacing:.04em;text-transform:uppercase;
+  padding:6px 9px;border-radius:8px;
+}
+.tag:hover{filter:brightness(.96)}
+.tag.on{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--tf)}
+.tag-0{--tb:var(--t0b);--tf:var(--t0f);--tc:var(--t0c)}
+.tag-1{--tb:var(--t1b);--tf:var(--t1f);--tc:var(--t1c)}
+.tag-2{--tb:var(--t2b);--tf:var(--t2f);--tc:var(--t2c)}
+.tag-3{--tb:var(--t3b);--tf:var(--t3f);--tc:var(--t3c)}
+.tag-4{--tb:var(--t4b);--tf:var(--t4f);--tc:var(--t4c)}
+.tag-5{--tb:var(--t5b);--tf:var(--t5f);--tc:var(--t5c)}
+.tag-6{--tb:var(--t6b);--tf:var(--t6f);--tc:var(--t6c)}
+.tag-7{--tb:var(--t7b);--tf:var(--t7f);--tc:var(--t7c)}
+.menu .tag{cursor:inherit;pointer-events:none}
+
+.catname{
+  display:block
+}
+.pill{
+  display:inline-block;margin-top:6px;padding:5px 9px;border-radius:8px;
+  background:var(--pill);color:var(--pill-fg);
+  font-weight:700;font-size:11px;line-height:1;letter-spacing:.06em;text-transform:uppercase;
+}
+.empty{text-align:center;color:var(--mu);padding:48px 16px}
+
+/* ===== Долна лента: общо + странициране ===== */
+.foot{
+  display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-top:1px solid var(--bd);
+}
+.total{color:var(--mu)}
+.total b{color:var(--fg);margin-left:6px}
+.foot-r{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px}
+.ps{display:flex;align-items:center;gap:10px;color:var(--mu)}
+.ps select{
+  height:38px;padding:0 10px;border:1px solid var(--bd);border-radius:8px;
+  background:var(--card);font-weight:700;cursor:pointer;color:var(--fg);
+}
+.pager{display:flex;align-items:center;gap:4px}
+.pg{
+  appearance:none;border:0;background:none;cursor:pointer;
+  min-width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  font-weight:700;font-size:15px;color:var(--fg);padding:0;
+}
+.pg:hover:not([disabled]){background:var(--pill)}
+.pg[aria-current="page"]{background:var(--ink);color:var(--ink-fg)}
+.pg[disabled]{opacity:.35;cursor:default}
+.gap{color:var(--mu);padding:0 6px;user-select:none}
+
+/* ===== Малки екрани ===== */
+@media(max-width:700px){
+  .page{margin:0;border-radius:0;padding:22px 16px 28px}
+  h1{font-size:28px}
+  .theme span{display:none}
+  .theme{padding:0 12px}
+  .search{max-width:none;flex-basis:100%}
+  .menu{width:min(310px,calc(100vw - 32px))}
+  .foot{padding:12px}
+}
+
+
+
+
+
+
+/* ===== Категория – персонализирано падащо меню ===== */
+.chip.sel select{display:none}          /* оригиналният select остава скрит, но работи */
+.chip.sel > .chev{display:none}         /* стрелката се рисува от бутона */
+
+.chip.sel .menu.wide{left:auto;right:0} /* да не излиза извън екрана */
+.chip.sel .chip-main[aria-expanded="true"] svg{transform:rotate(180deg)}
+.chip.sel .chip-main svg{transition:transform .15s}
+
+.copt{transition:background .12s}
+.copt:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+.cgroup{max-height:380px;overflow:auto}
+
+@media(max-width:700px){
+  .chip.sel .menu.wide{width:min(370px,calc(100vw - 32px));right:auto;left:0}
+  .chip-v.trunc{max-width:160px}
+}

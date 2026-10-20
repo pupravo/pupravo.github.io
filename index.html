@@ -1,130 +1,213 @@
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Разписание · Право I курс</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="style.css" rel="stylesheet">
-</head>
-<body>
+<title>Учебници</title>
+<style>
+    :root {
+  --font: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --text: #1f2328;
+  --link: #0969da;
+  --border: #d0d7de;
+  --border-table: #c9d6e2;
+  --stripe: #f1f5f9;
+  --bg: #ffffff;
+  --cell-pad-y: 10px;
+  --cell-pad-x: 14px;
+}
 
-  <div class="app">
-    <!-- SIDEBAR -->
-    <!-- <aside class="sidebar">
-      <div class="logo">П</div>
-      <div class="nav-icon" title="Начало">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
-      </div>
-      <div class="nav-icon active" title="Календар">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-      </div>
-      <div class="nav-icon" title="Конспекти">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg>
-      </div>
-      <div class="nav-icon" title="Изпити">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>
-      </div>
-      <div class="nav-icon" title="Групи">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.5"/><path d="M3.5 20c.6-3.4 3-5.4 5.5-5.4s4.9 2 5.5 5.4"/><path d="M15 20c.4-2.4 1.7-4 3.5-4.6"/></svg>
-      </div>
-      <div class="sidebar-spacer"></div>
-      <div class="nav-icon" title="Настройки">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/></svg>
-      </div>
-    </aside> -->
+.markdown-body {
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px;
+}
 
-    <!-- MAIN COLUMN -->
-    <div class="main-col">
-      <!-- TOPBAR -->
-      <!-- <div class="topbar">
-        <div class="topbar-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-          Календар
-        </div>
-        <div class="search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <input type="text" id="searchInput" placeholder="Търсене по предмет, преподавател, зала…">
-        </div>
-        <div class="topbar-right">
-          <button class="ics-btn" id="icsBtn">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
-            Свали .ics
-          </button>
-          <div class="icon-btn" title="Известия">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-          </div>
-          <div class="avatar">М</div>
-        </div>
-      </div> -->
+/* Heading */
+.markdown-body h1 {
+  font-size: 2em;
+  font-weight: 600;
+  margin: 0 0 16px;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border);
+}
 
-      <!-- CONTENT -->
-      <div class="content-row">
-        <!-- CALENDAR -->
-        <section class="calendar-panel">
-          <div class="cal-toolbar">
-            <div class="view-toggle" id="viewToggle">
-              <button class="view-btn active" data-view="list" title="Изглед: списък">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="3.5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="3.5" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>
-              </button>              
-              <button class="view-btn" data-view="grid" title="Изглед: календар">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-              </button>
-            </div>
+.markdown-body .anchor {
+  display: none;
+}
 
-            <span class="cal-title" id="calTitle"></span>
-            <button class="arrow-btn" id="prevBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <button class="arrow-btn" id="nextBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
+/* Table */
+.markdown-body table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
 
-            <div class="spacer"></div>
+.markdown-body table th,
+.markdown-body table td {
+  padding: var(--cell-pad-y) var(--cell-pad-x);
+  border: 1px solid var(--border-table);
+  vertical-align: middle;
+}
 
-            <div class="type-tabs" id="typeTabs"></div>
-            <select class="group-select" id="groupSelect"></select>
-            <button class="today-btn" id="todayBtn">Днес</button>
-          </div>
+.markdown-body table th {
+  font-weight: 600;
+  background: var(--bg);
+}
 
-          <div class="grid-wrap" id="gridWrap">
-            <div class="cal-grid" id="calGrid"></div>
-          </div>
-          <div class="list-wrap" id="listWrap"></div>
-        </section>
+.markdown-body table tr {
+  background: var(--bg);
+}
 
-        <!-- RIGHT PANEL -->
-        <!-- <aside class="right-panel">
-          <div class="panel-card group-card">
-            <h3>Бърз филтър по група</h3>
-            <p>Изберете номер, за да видите само упражненията и спорта на вашата група — лекциите остават видими за всички.</p>
-            <div class="group-pills" id="groupPills"></div>
-          </div>
+.markdown-body table tbody tr:nth-child(even) {
+  background: var(--stripe);
+}
 
-          <div class="panel-card upcoming-card">
-            <h3>Предстоящи занятия</h3>
-            <div class="upcoming-list" id="upcomingList"></div>
-          </div>
-        </aside> -->
-      </div>
-    </div>
-  </div>
+/* Alignment fallbacks (in case the align attributes are stripped) */
+.markdown-body table [align="center"] {
+  text-align: center;
+}
 
-  <!-- DAY MODAL -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="modalTitle"></h3>
-        <div class="modal-close" id="modalClose">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        </div>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-  <script type="text/javascript" src="./data.js"></script>
-  <script type="text/javascript" src="./script.js"></script>
-</body>
-</html>
+.markdown-body table [align="left"] {
+  text-align: left;
+}
+
+/* Links */
+.markdown-body a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.markdown-body a:hover {
+  text-decoration: none;
+}
+
+/* "скоро" text */
+.markdown-body table em {
+  font-style: italic;
+}
+</style>
+
+
+
+
+<div class="js-snippet-clipboard-copy-unpositioned DirectoryRichtextContent-module__SharedMarkdownContent__hHXUL" data-hpc="true" containertiming="hpc"><article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading" dir="auto">
+    
+<div style="background: #dedede; font-weight: bold; padding: 16px; font-size: 32px; margin-bottom: 32px;">
+    <a target="_blank" href="https://pupravo.github.io/programa" rel="nofollow">Календар - на учебните занятия</a>
+</div>    
+    
+    
+    <h1 tabindex="-1" class="heading-element" dir="auto">📚 Първи курс</h1><a id="user-content--първи-курс" class="anchor" aria-label="Permalink: 📚 Първи курс" href="#-първи-курс"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<table>
+<thead>
+<tr>
+<th align="center">#</th>
+<th align="left">Предмет / Subject</th>
+<th align="left">Автор / Author</th>
+<th align="center">📖 Книга (Notion)</th>
+<th align="center">📄 Речник понятия</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">1</td>
+<td align="left"> Римско право</td>
+<td align="left">Михаил Андреев</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/344ae491ed54809ebf2ecee9505a1d7f" rel="nofollow">Отвори</a></td>
+<td align="center"><a target="_blank" href="https://pupravo.github.io/dic/rp/" rel="nofollow">Отвори</a></td>
+</tr>
+
+<tr>
+<td align="center">2.1</td>
+<td align="left"> Латински език - за юристи</td>
+<td align="left">Мария Костова</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3eaae491ed5480eca163daa108f58ba1" rel="nofollow">Отвори</a></td>
+<td align="center"><a target="_blank" href="https://pupravo.github.io/dic/latin/" rel="nofollow">Отвори</a></td>
+</tr>
+
+<tr>
+<td align="center">2.2</td>
+<td align="left"> Латински език - термини</td>
+<td align="left">Мария Костова</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3edae491ed5480a9802df8744caf95a6" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>    
+    
+<tr>
+<td align="center">3</td>
+<td align="left">Международно публично право</td>
+<td align="left">Благой Видин</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3acae491ed5480c0990add331c849a40" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="left">Обща теория на правото</td>
+<td align="left">Росен Ташев</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3adae491ed54802aa4b8cd8ab6117757" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="left">Обща теория на правото</td>
+<td align="left">Даниел Вълчев</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3adae491ed54806485e5dd9198317214" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="left"> Конституционно право</td>
+<td align="left">Емилия Друмева</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3acae491ed548090bbc6dfcba37910a5" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="left">Гражданско право</td>
+<td align="left">Витали Таджер</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3acae491ed548084b9dcfcd9e041e2f0" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="left"> Гражданско право</td>
+<td align="left">Мария Павлова</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3acae491ed548030aedbfe6d3a06b918" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="left"> История на БДП (1878–1944)</td>
+<td align="left">Димитър Токушев</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/1878-1944-3c3ae491ed5480b8ae5dc20f14fe34a7" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="left"> История на БДП (средновековна)</td>
+<td align="left">Димитър Токушев</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/3c3ae491ed548023974ec16ac5cb3ef7" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="left"> История на БДП (680–1878)</td>
+<td align="left">Гълъбина Петрова</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/680-1878-3c6ae491ed54803e88e8d6b6d7b00e6c" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">12</td>
+<td align="left"> История на БДП (1944–1989)</td>
+<td align="left">Екатерина Михайлова</td>
+<td align="center"><a target="_blank" href="https://ludicrous-crabapple-37d.notion.site/1944-1989-3ceae491ed5480b38826e0e7407df7da" rel="nofollow">Отвори</a></td>
+<td align="center">-</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+</article></div>

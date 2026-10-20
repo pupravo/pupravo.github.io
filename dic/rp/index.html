@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Речник по римско право</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="page">
+  <h1>Речник по римско право</h1>
+  <p class="lead">Термини, латински означения и определения по глави – с търсене, филтри и сортиране.</p>
+
+  <div class="tabs" id="tabs" role="tablist" aria-label="Раздели"></div>
+
+  <div class="toolbar">
+    <label class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Търсене в термин, латински, определение…" autocomplete="off">
+    </label>
+
+    <div>
+      <button type="button" class="reset" id="reset" hidden>Изчисти</button>      
+      <div class="chip sel">
+        <span class="chip-l">Категория</span>
+        <select id="c" aria-label="Категория"></select>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+
+      <div class="chip" id="pWrap">
+        <button type="button" class="chip-main" id="pBtn" aria-haspopup="true" aria-expanded="false">
+          <span class="chip-l">Страни</span>
+          <span class="count" id="pCount" hidden></span>
+          <span class="chip-v" id="pVal">всички</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <button type="button" class="chip-x" id="pClear" hidden aria-label="Изчисти избора на страни">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+        <div class="menu" id="pMenu" hidden>
+          <div class="menu-list" id="pList"></div>
+          <div class="menu-foot">
+            <span>Избери всички</span>
+            <button type="button" class="box all" id="pAll" aria-label="Избери всички страни"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <div class="scroll">
+      <table>
+
+        <thead><tr id="head"></tr></thead>
+        <tbody id="b"></tbody>
+      </table>
+    </div>
+    <div class="foot">
+      <div class="total" id="total"></div>
+      <div class="foot-r">
+        <label class="ps">Редове на страница
+          <select id="size" aria-label="Редове на страница">
+            <option>10</option><option selected>15</option><option>25</option><option>50</option><option>100</option>
+          </select>
+        </label>
+        <nav class="pager" id="pager" aria-label="Странициране"></nav>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="category.js"></script>
+</body>
+</html>

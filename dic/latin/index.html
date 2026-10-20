@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Латински склонения</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <main class="content">
+    <header class="top">
+      <div class="titles">
+        <h1>Склонения</h1>
+        <p class="sub">Съществителни и прилагателни · окончанията са в <b>червено</b></p>
+      </div>
+    </header>
+    <div id="info" class="info"></div>
+    <section id="tables"></section>
+    <p class="note">Форма преди „/“ – мъжки и женски род; след „/“ – среден род. В жълтата колонка е цялата форма на избраната дума, в останалите – само окончанията. При среден род винителният е равен на именителния (в мн.ч. – <b>-a</b>).</p>
+  </main>
+  <aside class="side">
+    <input id="q" type="search" placeholder="Търси дума или превод…" autocomplete="off">
+    <div class="chips" id="chips"></div>
+    <div id="list"></div>
+    <div class="count" id="count"></div>
+  </aside>
+</div>
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
