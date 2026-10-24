@@ -209,7 +209,7 @@ function renderGrid() {
     dayEvents.forEach(e=> {
 
         cell.innerHTML += `
-            <div class="chip type-${e.type}" style="display: flex">
+            <div class="chip type-${e.type}" style="display: flex" style="background: ${e.bg}">
                 <div>
                     <div>${e.start} - ${e.end}</div>
                     <div>${e.subject}</div>
