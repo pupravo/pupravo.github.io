@@ -296,4 +296,6 @@
   renderSectionSelect();
   renderCatSelect();
   render();
+
+  window.RP = { getRows, catName: i => CATS[i], tagClass };
 })();
