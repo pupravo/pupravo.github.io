@@ -11,10 +11,7 @@
 </head>
 <body>
 <main class="page">
-  <h1>Речник по римско право</h1>
-  <p class="lead">Термини, латински означения и определения по глави – с търсене, филтри и сортиране.</p>
-
-  <div class="tabs" id="tabs" role="tablist" aria-label="Раздели"></div>
+  <h1 style="margin-bottom: 16px;">Речник по римско право</h1>
 
   <div class="toolbar">
     <label class="search">
@@ -24,7 +21,14 @@
 
     <div>
       <button type="button" class="reset" id="reset" hidden>Изчисти</button>      
-      <div class="chip sel">
+
+      <div class="chip sel" style="margin-right: 8px;">
+        <span class="chip-l">Раздел</span>
+        <select id="s" aria-label="Раздел"></select>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+
+      <div class="chip sel" style="margin-right: 8px;">
         <span class="chip-l">Категория</span>
         <select id="c" aria-label="Категория"></select>
         <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -64,7 +68,7 @@
       <div class="foot-r">
         <label class="ps">Редове на страница
           <select id="size" aria-label="Редове на страница">
-            <option>10</option><option selected>15</option><option>25</option><option>50</option><option>100</option>
+            <option>25</option><option>50</option><option>100</option>
           </select>
         </label>
         <nav class="pager" id="pager" aria-label="Странициране"></nav>

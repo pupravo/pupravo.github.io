@@ -1,28 +1,22 @@
 /* ===== Речник по римско право — логика =====
-   Данните (CATS, CH_SECTION, ROWS) са в data.js */
+   Данните (TERMS) са в data.js */
 
 (() => {
+  const NONE = '—';
+  const TAG_COLORS = 8;
+
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"']/g, c => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
   ));
   const collator = new Intl.Collator('bg', { sensitivity: 'base' });
 
-  /* ---- производни данни ---- */
-  const PARTIES = [...new Set(ROWS.flatMap(r => r[4].split(',')))]
-    .sort((a, b) => collator.compare(a, b));
-  const SECTIONS = [...new Set(Object.values(CH_SECTION))];
-  const CAT_SECTION = {};
-  ROWS.forEach(r => { CAT_SECTION[r[0]] = CH_SECTION[r[5]]; });
-  const tagClass = p => 'tag-' + (PARTIES.indexOf(p) % 8);
-
   const COLS = [
-    { k: 'term', label: 'Термин',      val: r => r[1] },
-    { k: 'lat',  label: 'Латински',    val: r => r[2] },
-    { k: 'def',  label: 'Определение', val: r => r[3] },
+    { k: 'term', label: 'Термин',      val: r => r.term },
+    { k: 'lat',  label: 'Латински',    val: r => r.lat },
+    { k: 'def',  label: 'Определение', val: r => r.def },
     { k: 'par',  label: 'Засегнати страни' },
-    { k: 'cat',  label: 'Категория',   val: r => r[0] },
-    // { k: 'ch',   label: 'Гл.',         val: r => r[5] }
+    // { k: 'cat',  label: 'Категория',   val: r => r.cat }
   ];
 
   /* ---- икони ---- */
@@ -38,22 +32,70 @@
     next:   svg('<path d="m9 6 6 6-6 6"/>', 16)
   };
 
+  /* ---- данни (попълват се след зареждане) ---- */
+  let ROWS = [];                     // нормализирани редове
+  let CATS = [];                     // имена на категории (индекс = id на категорията)
+  let CAT_SECTION = [];              // раздел за всяка категория
+  let SECTIONS = [];                 // раздели в реда на появяване
+  let PARTIES = [];                  // всички страни, подредени по азбучен ред
+  let PARTY_CLASS = new Map();
+  let SECTION_PARTIES = new Map();   // раздел -> Set от страни
+  const tagClass = p => PARTY_CLASS.get(p);
+
   /* ---- състояние ---- */
   const state = {
     q: '', section: '', cat: '',
     parties: new Set(),
     sort: { key: null, dir: 1 },
-    page: 1, size: 15
+    page: 1, size: 25
   };
+
+  /* страни, видими за избрания раздел (при „всички“ – всички) */
+  const visibleParties = () => state.section
+    ? [...(SECTION_PARTIES.get(state.section) || [])].sort(collator.compare)
+    : PARTIES;
+
+  /* ---- нормализиране на JSON ---- */
+  function buildData(items) {
+    const catIndex = new Map();
+    const sections = new Set();
+    const parties = new Set();
+
+    ROWS = items.map(t => {
+      if (!catIndex.has(t.categoryName)) {
+        catIndex.set(t.categoryName, CATS.length);
+        CATS.push(t.categoryName);
+        CAT_SECTION.push(t.section);
+      }
+      sections.add(t.section);
+      const plist = Array.isArray(t.parties) ? t.parties : [];
+      if (!SECTION_PARTIES.has(t.section)) SECTION_PARTIES.set(t.section, new Set());
+      plist.forEach(p => { parties.add(p); SECTION_PARTIES.get(t.section).add(p); });
+      return {
+        id: t.id,
+        term: t.term,
+        lat: t.latin || NONE,
+        def: t.definition || NONE,
+        parties: plist,
+        cat: catIndex.get(t.categoryName),
+        section: t.section,
+        hay: [t.term, t.latin, t.definition].filter(Boolean).join(' ').toLowerCase()
+      };
+    });
+
+    SECTIONS = [...sections];
+    PARTIES = [...parties].sort(collator.compare);
+    PARTY_CLASS = new Map(PARTIES.map((p, i) => [p, 'tag-' + (i % TAG_COLORS)]));
+  }
 
   /* ---- филтриране и сортиране ---- */
   function getRows() {
     const q = state.q.trim().toLowerCase();
     let rows = ROWS.filter(r =>
-      (!state.section || CH_SECTION[r[5]] === state.section) &&
-      (state.cat === '' || r[0] === +state.cat) &&
-      (!state.parties.size || r[4].split(',').some(p => state.parties.has(p))) &&
-      (!q || r.slice(1, 4).join(' ').toLowerCase().includes(q))
+      (!state.section || r.section === state.section) &&
+      (state.cat === '' || r.cat === state.cat) &&
+      (!state.parties.size || r.parties.some(p => state.parties.has(p))) &&
+      (!q || r.hay.includes(q))
     );
     const { key, dir } = state.sort;
     const col = COLS.find(c => c.k === key);
@@ -61,7 +103,7 @@
       rows = rows.slice().sort((a, b) => {
         const x = col.val(a), y = col.val(b);
         if (typeof x === 'number') return (x - y) * dir;
-        const ex = x === '—', ey = y === '—';
+        const ex = x === NONE, ey = y === NONE;
         if (ex !== ey) return ex ? 1 : -1;      // „—“ винаги най-отзад
         return collator.compare(x, y) * dir;
       });
@@ -70,11 +112,10 @@
   }
 
   /* ---- рендериране ---- */
-  function renderTabs() {
-    const items = [['', 'Всички'], ...SECTIONS.map(s => [s, s])];
-    $('tabs').innerHTML = items.map(([v, l]) =>
-      `<button type="button" class="tab" role="tab" data-section="${esc(v)}" aria-selected="${state.section === v}">${esc(l)}</button>`
-    ).join('');
+  function renderSectionSelect() {
+    $('s').innerHTML = '<option value="">всички</option>' +
+      SECTIONS.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+    $('s').value = state.section;
   }
 
   function renderCatSelect() {
@@ -97,20 +138,21 @@
 
   function renderBody(rows) {
     if (!rows.length) {
-      $('b').innerHTML = '<tr><td class="empty" colspan="6">Няма намерени термини.</td></tr>';
+      $('b').innerHTML = '<tr><td class="empty" colspan="5">Няма намерени термини.</td></tr>';
       return;
     }
     $('b').innerHTML = rows.map(r => {
-      const tags = r[4].split(',').map(p =>
+      const tags = r.parties.map(p =>
         `<button type="button" class="tag ${tagClass(p)}${state.parties.has(p) ? ' on' : ''}" data-party="${esc(p)}">${esc(p)}</button>`
       ).join('');
-      const lat = r[2] === '—' ? '<span class="none">—</span>' : `<span class="lat">${esc(r[2])}</span>`;
+      const lat = r.lat === NONE ? `<span class="none">${NONE}</span>` : `<span class="lat">${esc(r.lat)}</span>`;
+      const def = r.def === NONE ? `<span class="none">${NONE}</span>` : esc(r.def);
       return `<tr>
-        <td class="term">${esc(r[1])}</td>
+        <td class="term">${esc(r.term)}</td>
         <td>${lat}</td>
-        <td>${esc(r[3])}</td>
+        <td>${def}</td>
         <td><div class="tags">${tags}</div></td>
-        <td><span class="catname">${esc(CATS[r[0]])}</span><span class="pill">${esc(CH_SECTION[r[5]])}</span></td>
+        <!-- <td><span class="catname">${esc(CATS[r.cat])}</span><span class="pill">${esc(r.section)}</span></td>-->
       </tr>`;
     }).join('');
   }
@@ -148,13 +190,13 @@
     $('pClear').hidden = !n;
     $('pList').querySelectorAll('input').forEach(i => { i.checked = state.parties.has(i.value); });
     const all = $('pAll');
-    const s = n === 0 ? 'none' : n === PARTIES.length ? 'all' : 'some';
+    const s = n === 0 ? 'none' : n === visibleParties().length ? 'all' : 'some';
     all.dataset.s = s;
     all.innerHTML = s === 'all' ? I.check : s === 'some' ? I.dash : '';
   }
 
   function buildPartyMenu() {
-    $('pList').innerHTML = PARTIES.map(p =>
+    $('pList').innerHTML = visibleParties().map(p =>
       `<label class="opt"><input type="checkbox" value="${esc(p)}"><span class="box">${I.check}</span><span class="tag ${tagClass(p)}">${esc(p)}</span></label>`
     ).join('');
   }
@@ -187,66 +229,71 @@
   }
 
   /* ---- събития ---- */
-  $('q').addEventListener('input', e => { state.q = e.target.value; state.page = 1; render(); });
+  function bindEvents() {
+    $('q').addEventListener('input', e => { state.q = e.target.value; state.page = 1; render(); });
 
-  $('tabs').addEventListener('click', e => {
-    const t = e.target.closest('[data-section]');
-    if (!t) return;
-    state.section = t.dataset.section;
-    if (state.cat !== '' && state.section && CAT_SECTION[state.cat] !== state.section) state.cat = '';
-    state.page = 1;
-    renderTabs(); renderCatSelect(); render();
-  });
+    $('s').addEventListener('change', e => {
+      state.section = e.target.value;
+      if (state.cat !== '' && state.section && CAT_SECTION[state.cat] !== state.section) state.cat = '';
+      const allowed = new Set(visibleParties());
+      state.parties.forEach(p => { if (!allowed.has(p)) state.parties.delete(p); });
+      state.page = 1;
+      renderCatSelect(); buildPartyMenu(); render();
+    });
 
-  $('c').addEventListener('change', e => { state.cat = e.target.value === '' ? '' : +e.target.value; state.page = 1; render(); });
+    $('c').addEventListener('change', e => { state.cat = e.target.value === '' ? '' : +e.target.value; state.page = 1; render(); });
 
-  $('pBtn').addEventListener('click', () => toggleMenu());
-  $('pClear').addEventListener('click', () => { state.parties.clear(); state.page = 1; render(); });
-  $('pList').addEventListener('change', e => { if (e.target.matches('input')) toggleParty(e.target.value); });
-  $('pAll').addEventListener('click', () => {
-    if (state.parties.size === PARTIES.length) state.parties.clear();
-    else PARTIES.forEach(p => state.parties.add(p));
-    state.page = 1; render();
-  });
+    $('pBtn').addEventListener('click', () => toggleMenu());
+    $('pClear').addEventListener('click', () => { state.parties.clear(); state.page = 1; render(); });
+    $('pList').addEventListener('change', e => { if (e.target.matches('input')) toggleParty(e.target.value); });
+    $('pAll').addEventListener('click', () => {
+      const vis = visibleParties();
+      if (state.parties.size === vis.length) state.parties.clear();
+      else vis.forEach(p => state.parties.add(p));
+      state.page = 1; render();
+    });
 
-  document.addEventListener('click', e => { if (!$('pWrap').contains(e.target)) toggleMenu(false); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
+    document.addEventListener('click', e => { if (!$('pWrap').contains(e.target)) toggleMenu(false); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
 
-  $('b').addEventListener('click', e => {
-    const t = e.target.closest('[data-party]');
-    if (t) toggleParty(t.dataset.party);
-  });
+    $('b').addEventListener('click', e => {
+      const t = e.target.closest('[data-party]');
+      if (t) toggleParty(t.dataset.party);
+    });
 
-  $('head').addEventListener('click', e => {
-    const b = e.target.closest('[data-sort]');
-    if (!b) return;
-    const k = b.dataset.sort, s = state.sort;
-    if (s.key !== k) { s.key = k; s.dir = 1; }
-    else if (s.dir === 1) s.dir = -1;
-    else { s.key = null; s.dir = 1; }
-    state.page = 1;
-    render();
-  });
+    $('head').addEventListener('click', e => {
+      const b = e.target.closest('[data-sort]');
+      if (!b) return;
+      const k = b.dataset.sort, s = state.sort;
+      if (s.key !== k) { s.key = k; s.dir = 1; }
+      else if (s.dir === 1) s.dir = -1;
+      else { s.key = null; s.dir = 1; }
+      state.page = 1;
+      render();
+    });
 
-  $('size').addEventListener('change', e => { state.size = +e.target.value; state.page = 1; render(); });
+    $('size').addEventListener('change', e => { state.size = +e.target.value; state.page = 1; render(); });
 
-  $('pager').addEventListener('click', e => {
-    const b = e.target.closest('[data-page]');
-    if (!b || b.disabled) return;
-    state.page = +b.dataset.page;
-    render();
-    $('b').closest('.card').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  });
+    $('pager').addEventListener('click', e => {
+      const b = e.target.closest('[data-page]');
+      if (!b || b.disabled) return;
+      state.page = +b.dataset.page;
+      render();
+      $('b').closest('.card').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
 
-  $('reset').addEventListener('click', () => {
-    state.q = ''; state.section = ''; state.cat = ''; state.parties.clear(); state.page = 1;
-    $('q').value = '';
-    renderTabs(); renderCatSelect(); render();
-  });
+    $('reset').addEventListener('click', () => {
+      state.q = ''; state.section = ''; state.cat = ''; state.parties.clear(); state.page = 1;
+      $('q').value = '';
+      renderSectionSelect(); renderCatSelect(); buildPartyMenu(); render();
+    });
+  }
 
   /* ---- старт ---- */
+  buildData(TERMS);
   buildPartyMenu();
-  renderTabs();
+  bindEvents();
+  renderSectionSelect();
   renderCatSelect();
   render();
 })();
