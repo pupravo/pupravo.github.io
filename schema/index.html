@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Схема</title>
+<style>
+:root{
+  --bg:#f3f1ec; --ink:#1d1d1f; --muted:#6a675f; --line:#6b675d; --card:#fff;
+  --green:#b9efc0; --yellow:#fbe58f; --pink:#f7c4c4; --blue:#c3dcf7;
+  --g-b:#3c9a52; --y-b:#c9a100; --p-b:#c75a5a; --b-b:#3b78b8; --n-b:#8d897f;
+  --font:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);display:flex;flex-direction:column}
+header{display:flex;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid #d8d4ca;background:#faf9f6;z-index:6}
+header h1{font-size:16px;margin:0;flex:1;font-weight:600}
+header h1 small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+button{font:inherit;font-size:13px;padding:6px 12px;border:1px solid #b9b5aa;background:#fff;border-radius:6px;cursor:pointer;color:var(--ink)}
+button:hover{background:#efece4}
+button:focus-visible,.node:focus-visible{outline:3px solid #2b6cb0;outline-offset:2px}
+main{flex:1;min-height:0;position:relative;overflow:hidden}
+#viewport{position:absolute;inset:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  background-image:radial-gradient(#d3cec1 1px,transparent 1.2px);background-size:24px 24px}
+#viewport.panning{cursor:grabbing}
+#viewport.space .node,#viewport.space .tog{cursor:grab}
+#world{position:absolute;left:0;top:0;transform-origin:0 0}
+#lines{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
+#lines path{fill:none;stroke-width:2.4;stroke-linecap:round}
+.node{position:absolute;width:max-content;min-width:90px;max-width:190px;padding:8px 10px;text-align:center;font-size:13px;line-height:1.35;background:var(--card);border:1px solid #2a2a2a;border-radius:6px;border-top-width:4px;box-shadow:2px 2px 0 rgba(0,0,0,.18)}
+.node b{display:block;font-weight:600}
+.node span{display:block;color:var(--muted);font-size:12px}
+.node.fill{border-top-width:1px}
+.node.fill.t-green{background:var(--green)} .node.fill.t-yellow{background:var(--yellow)}
+.node.fill.t-pink{background:var(--pink)} .node.fill.t-blue{background:var(--blue)}
+.node.t-green{border-top-color:var(--g-b)} .node.t-yellow{border-top-color:var(--y-b)}
+.node.t-pink{border-top-color:var(--p-b)} .node.t-blue{border-top-color:var(--b-b)}
+.node.t-plain{border-top-color:var(--n-b)}
+.node.root{max-width:340px;font-size:15px;border-radius:10px}
+.node.has{cursor:pointer}
+.node.has:hover{box-shadow:3px 3px 0 rgba(0,0,0,.28)}
+.node.has::after{content:"";position:absolute;right:5px;bottom:5px;width:7px;height:7px;border-radius:50%;background:#2b6cb0}
+.node.active{outline:3px solid #2b6cb0;outline-offset:2px}
+.tog{position:absolute;transform:translate(-50%,-50%);min-width:22px;height:22px;padding:0 6px;border-radius:11px;border:1px solid #2a2a2a;background:#fff;font-size:12px;line-height:18px;font-weight:600;cursor:pointer;z-index:2}
+.tog:hover{background:#2b6cb0;color:#fff;border-color:#2b6cb0}
+#hint{position:absolute;left:12px;bottom:10px;font-size:12px;color:var(--muted);background:rgba(250,249,246,.9);padding:4px 8px;border-radius:4px;pointer-events:none;z-index:3}
+aside{position:absolute;right:0;top:0;bottom:0;width:min(400px,100%);background:#fff;border-left:1px solid #cfcabd;z-index:5;
+  transform:translateX(100%);visibility:hidden;transition:transform .22s ease,visibility 0s .22s}
+aside.open{transform:none;visibility:visible;transition:transform .22s ease,visibility 0s 0s}
+@media (prefers-reduced-motion:reduce){aside,aside.open{transition:none}}
+.panel{height:100%;overflow:auto;padding-bottom:28px}
+.panel-head{padding:18px 20px 14px;border-top:6px solid var(--n-b);position:sticky;top:0;background:#fff;border-bottom:1px solid #e6e2d8}
+.panel-head h2{margin:0 36px 2px 0;font-size:19px;line-height:1.25}
+.panel-head .term{font-style:italic;color:var(--muted);font-size:14px}
+.panel-head .x{position:absolute;right:12px;top:14px;padding:2px 9px;font-size:18px;line-height:1.2}
+.panel-body{padding:14px 20px;font-size:14.5px;line-height:1.6}
+.panel-body p{margin:0 0 12px}
+.panel-body ul{padding-left:20px;margin:0 0 12px}
+.panel-body li{margin-bottom:4px}
+.path{font-size:12px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Схема<small id="subtitle"></small></h1>
+  <button id="btnCol">Свий всичко</button>
+  <button id="btnExp">Разгъни всичко</button>
+  <button id="btnFit">Центрирай</button>
+</header>
+<main>
+  <div id="viewport"><div id="world"><svg id="lines"></svg><div id="nodes"></div><div id="bubbles"></div></div></div>
+  <div id="hint">Space + влачене или влачене по фона: движение · колелце: мащаб · двоен клик по фона: центриране</div>
+  <aside id="side" aria-live="polite"></aside>
+</main>
+
+<!--
+  ДАННИ: редактирай JSON-а по-долу.
+  Възел: label, sub (по избор), tone (green|yellow|pink|blue), details {term, text, points[]},
+  children[], collapsed (true/false), line ("solid"|"dashed" – линията от родителя към този възел).
+  Можеш да пуснеш и друг .json файл върху страницата.
+-->
+<script id="data" type="application/json">
+{
+  "title": "Римско вещно право",
+  "subtitle": "Владение и собственост",
+  "root": {
+    "label": "РИМСКО ВЕЩНО ПРАВО:",
+    "sub": "(ВЛАДЕНИЕ И СОБСТВЕНОСТ)",
+    "children": [
+      {
+        "label": "ВЛАДЕНИЕ", "sub": "(Possessio) – фактическо състояние", "tone": "green",
+        "details": {
+          "term": "Possessio",
+          "text": "Владението е фактическа власт върху вещ, упражнявана с намерение тя да се държи за себе си. То е различно от собствеността: владелецът може да не е собственик, а собственикът – да не владее.\nВладението се защитава от претора чрез интердикти, независимо от въпроса кой има право върху вещта."
+        },
+        "children": [
+          {
+            "label": "Същност и елементи",
+            "children": [
+              {"label": "Corpus = Държане (Detentio)", "details": {"term": "Corpus / Detentio", "text": "Обективният елемент: фактическата власт върху вещта – възможността лицето да я държи и да разполага с нея физически.", "points": ["Не изисква постоянен физически контакт с вещта.", "Само corpus, без animus, е просто държане (detentio), напр. наемател или депозитар.", "Държателят не е владелец и не се ползва от интердиктите."]}},
+              {"label": "Animus (Намерение за своене)", "details": {"term": "Animus possidendi / rem sibi habendi", "text": "Субективният елемент: волята на лицето да държи вещта за себе си, като своя.", "points": ["Различава владелеца от обикновения държател.", "Заедно с corpus образува пълното владение (possessio)."]}}
+            ]
+          },
+          {
+            "label": "Видове владение",
+            "children": [
+              {"label": "Законно / Незаконно", "details": {"term": "Iusta / Iniusta possessio", "text": "Законно е владението, основано на правно основание (iusta causa). Незаконно е това без основание или придобито порочно.", "points": ["Порочно владение (vitiosa possessio) спрямо противника е придобитото vi (със сила), clam (тайно) или precario (по молба, с право на отнемане).", "Само законното владение може да доведе до придобиване по давност."]}},
+              {"label": "Добросъвестно / Недобросъвестно (напр. крадец)", "details": {"term": "Bona fides / Mala fides", "text": "Владелецът е добросъвестен, когато не знае и не е длъжен да знае, че няма право върху вещта. Недобросъвестен е този, който знае – например крадецът.", "points": ["Добросъвестният владелец придобива плодовете и може да използва усукапио.", "Недобросъвестният отговаря за вредите и връща плодовете."]}}
+            ]
+          },
+          {
+            "label": "Защита на факта",
+            "children": [
+              {"label": "Бърза административна защита чрез ИНТЕРДИКТИ", "details": {"term": "Interdicta", "text": "Интердиктите са заповеди на претора, издавани по молба на владелеца, без да се разглежда същинският спор за собствеността. Целят бързо да се възстанови или запази фактическото положение и да се предотврати самоуправство."}},
+              {"label": "Интердикти за запазване (при смущение)", "details": {"term": "Interdicta retinendae possessionis", "text": "Дават се, когато владението е смутено, но не е отнето.", "points": ["Uti possidetis – за недвижими вещи.", "Utrubi – за движими вещи."]}},
+              {"label": "Интердикти за възстановяване (при отнемане)", "details": {"term": "Interdicta recuperandae possessionis", "text": "Дават се, когато владението е вече загубено в резултат на насилие или злоупотреба.", "points": ["Unde vi – при отнемане със сила.", "De precario – за вещ, дадена по молба и невърната."]}}
+            ]
+          }
+        ]
+      },
+      {
+        "label": "2. СОБСТВЕНОСТ", "sub": "(Dominium) – Абсолютно право", "tone": "yellow",
+        "details": {
+          "term": "Dominium / Proprietas",
+          "text": "Собствеността е най-пълното вещно право върху вещ. Тя е абсолютно право, защото действа срещу всички (erga omnes), и дава на собственика всички правомощия върху вещта в рамките на закона.\nВ римското право няма легална дефиниция – съдържанието ѝ се описва чрез правомощията."
+        },
+        "children": [
+          {
+            "label": "Същност и правомощия",
+            "children": [
+              {"label": "Ius utendi (Ползване)", "details": {"term": "Ius utendi", "text": "Правото да се използва вещта според предназначението ѝ, без да се променя или да се консумира."}},
+              {"label": "Ius fruendi (Събиране на плодове)", "details": {"term": "Ius fruendi", "text": "Правото да се добиват и присвояват плодовете на вещта – естествени (реколта, приплод) и гражданскоправни (наем, лихви)."}},
+              {"label": "Ius abutendi (Разпореждане)", "details": {"term": "Ius abutendi", "text": "Правото на разпореждане: да се продаде, да се подари, да се обремени или да се унищожи вещта.", "points": ["Включва фактическо (унищожаване) и правно (прехвърляне, обременяване) разпореждане."]}}
+            ]
+          },
+          {
+            "label": "Видове собственост", "tone": "pink",
+            "children": [
+              {"label": "Квиритска (Dominium ex iure Quiritium – строга, за римски граждани)", "details": {"term": "Dominium ex iure Quiritium", "text": "Най-старата и пълна форма на собственост, призната от цивилното право.", "points": ["Субект: само римски граждани (и тези с ius commercii).", "Обект: вещи в Италия, а при res mancipi – само по строги формални способи.", "Защита: rei vindicatio."]}},
+              {"label": "Бонитарна (преторска собственост)", "line": "dashed", "details": {"term": "In bonis habere", "text": "Собственост, призната от претора, когато вещта (res mancipi) е предадена само чрез traditio, без mancipatio или in iure cessio.", "points": ["Приобретателят не е квирит, но претор го защитава.", "Защита: actio Publiciana и exceptio rei venditae et traditae."]}},
+              {"label": "Провинциална (върху провинциални земи)", "line": "dashed", "details": {"term": "Possessio vel ususfructus", "text": "Земите в провинциите принадлежат на римския народ или на императора, а частните лица ги държат с правото да ги владеят и ползват срещу данък (tributum, stipendium).", "points": ["Не е квиритска собственост, но с времето се приравнява на пълна собственост."]}},
+              {"label": "Перегринска (за чужденци)", "line": "dashed", "details": {"term": "Peregrina proprietas", "text": "Собственост на чужденци (peregrini). Те не могат да имат квиритска собственост, но притежанието им се признава според собственото им право или според ius gentium."}}
+            ]
+          },
+          {
+            "label": "Придобиване на собственост",
+            "children": [
+              {
+                "label": "Първични способи (Originarii)",
+                "details": {"term": "Modi originarii", "text": "Собствеността възниква независимо от правото на предишен собственик – или вещта не е имала собственик, или правото на лицето не е определящо."},
+                "children": [
+                  {"label": "Occupatio (Завладяване на ничия вещ)", "details": {"term": "Occupatio", "text": "Придобиване на вещ без собственик (res nullius) чрез завладяването ѝ с намерение да е своя.", "points": ["Примери: лов и риболов, диви животни, изоставени вещи (res derelictae)."]}},
+                  {"label": "Accessio (Приращение)", "details": {"term": "Accessio", "text": "Собственикът на главната вещ става собственик и на нейното принадлежност, която се слива с нея.", "points": ["Недвижими: alluvio, avulsio, insula in flumine nata.", "Движими: specificatio, commixtio, confusio."]}},
+                  {"label": "Usucapio (Придобиване по давност)", "line": "dashed", "details": {"term": "Usucapio", "text": "Придобиване на собственост чрез непрекъснато владение за определен срок.", "points": ["Условия: res habilis, iusta causa (titulus), bona fides, possessio, tempus.", "Срок по Законите на XII таблици: 1 година за движими, 2 години за недвижими вещи.", "В някои учебници се класифицира като производен способ."]}}
+                ]
+              },
+              {
+                "label": "Производни способи (Derivativi)",
+                "details": {"term": "Modi derivativi", "text": "Собствеността се прехвърля от предишния собственик (auctor) на новия. Приобретателят не може да получи повече права от тези на праводателя (nemo plus iuris)."},
+                "children": [
+                  {"label": "Mancipatio (Строг ритуал с везни и бронз)", "details": {"term": "Mancipatio", "text": "Строго формален цивилен способ за прехвърляне на res mancipi.", "points": ["Ритуал пред пет свидетели (римски граждани) и libripens, който държи везна.", "Приобретателят удря везната с парче бронз (aes), символизиращо цената.", "Произнася се формула: hunc ego hominem ex iure Quiritium meum esse aio."]}},
+                  {"label": "In iure cessio (Фиктивен съдебен процес)", "details": {"term": "In iure cessio", "text": "Прехвърляне чрез симулиран спор пред магистрата (претор), като приобретателят предявява rei vindicatio, а праводателят мълчаливо признава иска.", "points": ["Подходящ както за res mancipi, така и за res nec mancipi."]}},
+                  {"label": "Traditio (Неформално предаване на фактическата власт)", "details": {"term": "Traditio", "text": "Предаване на владението върху вещта с намерение да се прехвърли собствеността.", "points": ["Основен способ за res nec mancipi и за вещи на перегрини.", "Изисква iusta causa traditionis (продажба, дарение и т.н.).", "При res mancipi води до бонитарна собственост."]}}
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Защита на правото",
+            "children": [
+              {
+                "label": "Съдебна защита чрез ИСКОВЕ (Actiones in rem)",
+                "details": {"term": "Actiones in rem", "text": "Вещните искове се насочват срещу всеки, който пречи на правото на ищеца, а не срещу определен длъжник. Това е следствие от абсолютния характер на вещните права."},
+                "children": [
+                  {"label": "Rei vindicatio (Петиторен иск на невлоядеещия собственик)", "details": {"term": "Rei vindicatio", "text": "Искът на собственика, който не владее вещта, срещу владеещия или държащия я несобственик, за да му бъде върната.", "points": ["Ищецът трябва да докаже собствеността си (probatio diabolica при производни способи).", "Ответникът трябва да владее или да държи вещта."]}},
+                  {"label": "Actio negatoria (Иск срещу неоснователни смущения и претенции)", "details": {"term": "Actio negatoria", "text": "Искът на собственика срещу лице, което неоснователно претендира за сервитут или пречи на ползването, без да отнема владението.", "points": ["Целта е да се установи, че вещта е свободна от твърдяното право."]}},
+                  {"label": "Actio Publiciana (Иск с фикция за защита на бонитарния собственик)", "details": {"term": "Actio Publiciana", "text": "Преторски иск, при който преторът допуска фикцията, че давностният срок вече е изтекъл, и така защитава добросъвестния приобретател на вещ.", "points": ["Защитава бонитарния собственик и този, който е в процес на usucapio.", "Не действа срещу истинския квиритски собственик, който владее."]}}
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+</script>
+
+<script>
+(function(){
+  var TONES = {green:1, yellow:1, pink:1, blue:1};
+  var COL = {green:'var(--g-b)', yellow:'var(--y-b)', pink:'var(--p-b)', blue:'var(--b-b)', plain:'var(--line)'};
+  var GAPX = 110, GAPY = 14, STUB = 32;
+  var $ = function(id){ return document.getElementById(id); };
+  var viewport = $('viewport'), world = $('world'), svg = $('lines'),
+      nodesL = $('nodes'), bubblesL = $('bubbles'), side = $('side');
+  var current = null, activeData = null, all = [], view = {x:0, y:0, k:1};
+
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function walk(n, f){ f(n); (n.children || []).forEach(function(c){ walk(c, f); }); }
+
+  /* ---------- изглед (pan / zoom) ---------- */
+  function applyView(){
+    world.style.transform = 'translate(' + view.x + 'px,' + view.y + 'px) scale(' + view.k + ')';
+    viewport.style.backgroundPosition = view.x + 'px ' + view.y + 'px';
+    var s = 24 * view.k + 'px';
+    viewport.style.backgroundSize = s + ' ' + s;
+  }
+  function animateView(){
+    world.style.transition = 'transform .28s ease';
+    applyView();
+    setTimeout(function(){ world.style.transition = ''; }, 320);
+  }
+  function zoomAt(px, py, f){
+    var nk = Math.min(2.5, Math.max(0.2, view.k * f));
+    f = nk / view.k;
+    view.x = px - (px - view.x) * f;
+    view.y = py - (py - view.y) * f;
+    view.k = nk;
+  }
+  function resetView(){
+    var vw = viewport.clientWidth, vh = viewport.clientHeight;
+    var minX = 0, maxX = 0, minY = 0, maxY = 0;
+    all.forEach(function(n){
+      minX = Math.min(minX, n.cx - n._w / 2); maxX = Math.max(maxX, n.cx + n._w / 2 + STUB);
+      minY = Math.min(minY, n.cy - n._h / 2); maxY = Math.max(maxY, n.cy + n._h / 2);
+    });
+    var r = current.root; maxY = Math.max(maxY, r._h / 2 + STUB + 14);
+    var half = Math.max(-minX, maxX) + 50, hh = (maxY - minY) + 100;
+    var k = Math.max(0.2, Math.min(1, (vw / 2) / half, vh / hh));
+    view.k = k; view.x = vw / 2; view.y = vh / 2 - ((minY + maxY) / 2) * k;
+    animateView();
+  }
+
+  /* ---------- построяване ---------- */
+  function make(n, tone, trail, depth){
+    var explicit = TONES[n.tone] ? n.tone : null, t = explicit || tone;
+    var box = el('div', 'node t-' + t + (explicit ? ' fill' : '') + (depth === 0 ? ' root' : ''));
+    box.appendChild(el('b', null, n.label || ''));
+    if (n.sub) box.appendChild(el('span', null, n.sub));
+    var path = trail.concat(n.label || '');
+    n._box = box; n._tone = t; n._path = path; box._n = n;
+    if (n === activeData) box.classList.add('active');
+    var hasKids = !!(n.children && n.children.length);
+    n._toggle = function(){
+      var go = function(){
+        var ox = n.cx, oy = n.cy;
+        n.collapsed = !n.collapsed;
+        rebuild();
+        view.x -= (n.cx - ox) * view.k; view.y -= (n.cy - oy) * view.k;
+        applyView();
+      };
+      if (side.classList.contains('open')) { closePanel(); setTimeout(go, 260); } else go();
+    };
+    if (n.details) {
+      box.classList.add('has'); box.tabIndex = 0; box.setAttribute('role', 'button');
+      box.addEventListener('click', function(){ openPanel(n); });
+      box.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); openPanel(n); } });
+    } else if (hasKids) {
+      box.style.cursor = 'pointer';
+      box.addEventListener('click', n._toggle);
+    }
+    nodesL.appendChild(box);
+    all.push(n);
+    n._vis = (hasKids && !n.collapsed) ? n.children : [];
+    n._vis.forEach(function(c){ make(c, t, path, depth + 1); });
+  }
+
+  function measure(n){
+    n._w = n._box.offsetWidth; n._h = n._box.offsetHeight;
+    var sum = 0;
+    n._vis.forEach(function(c, i){ measure(c); sum += c._sh + (i ? GAPY : 0); });
+    n._sum = sum; n._sh = Math.max(n._h, sum);
+  }
+  function place(n, dir, edge, top){
+    n._dir = dir;
+    n.cx = edge + dir * (GAPX + n._w / 2);
+    var outer = edge + dir * (GAPX + n._w), ct = top + (n._sh - n._sum) / 2;
+    n._vis.forEach(function(c){ place(c, dir, outer, ct); ct += c._sh + GAPY; });
+    n.cy = n._vis.length ? (n._vis[0].cy + n._vis[n._vis.length - 1].cy) / 2 : top + n._sh / 2;
+  }
+  function layout(){
+    var r = current.root;
+    measure(r);
+    r.cx = 0; r.cy = 0; r._dir = 1;
+    var kids = r._vis, total = 0, k = kids.length;
+    kids.forEach(function(c){ total += c._sh; });
+    if (kids.length > 1) {
+      var acc = 0, best = 1, bd = Infinity;
+      for (var i = 1; i < kids.length; i++) {
+        acc += kids[i - 1]._sh;
+        var d = Math.abs(2 * acc - total);
+        if (d < bd) { bd = d; best = i; }
+      }
+      k = best;
+    }
+    [[kids.slice(0, k), 1], [kids.slice(k), -1]].forEach(function(g){
+      var grp = g[0], dir = g[1];
+      if (!grp.length) return;
+      var H = -GAPY; grp.forEach(function(c){ H += c._sh + GAPY; });
+      var top = -H / 2;
+      grp.forEach(function(c){ place(c, dir, dir * r._w / 2, top); top += c._sh + GAPY; });
+    });
+    all.forEach(function(n){
+      n._box.style.left = Math.round(n.cx - n._w / 2) + 'px';
+      n._box.style.top = Math.round(n.cy - n._h / 2) + 'px';
+    });
+  }
+
+  function ns(tag){ return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+  function addPath(d, color, dash){
+    var p = ns('path');
+    p.setAttribute('d', d); p.style.stroke = color;
+    if (dash) p.setAttribute('stroke-dasharray', '7 6');
+    svg.appendChild(p);
+  }
+  function curve(x0, y0, x1, y1, dir){
+    var dx = Math.abs(x1 - x0) * 0.55;
+    return 'M' + x0 + ' ' + y0 + 'C' + (x0 + dir * dx) + ' ' + y0 + ' ' + (x1 - dir * dx) + ' ' + y1 + ' ' + x1 + ' ' + y1;
+  }
+  function bubble(n, x, y){
+    var b = el('button', 'tog', n.collapsed ? '+' + n.children.length : '\u2212');
+    b.type = 'button';
+    b.title = n.collapsed ? 'Разгъни' : 'Свий';
+    b.setAttribute('aria-label', b.title);
+    b.setAttribute('aria-expanded', n.collapsed ? 'false' : 'true');
+    b.style.left = x + 'px'; b.style.top = y + 'px';
+    b.addEventListener('click', n._toggle);
+    bubblesL.appendChild(b);
+  }
+  function draw(){
+    var root = current.root;
+    all.forEach(function(n){
+      if (!(n.children && n.children.length)) return;
+      if (n === root) {
+        n._vis.forEach(function(c){
+          addPath(curve(c._dir * n._w / 2, 0, c.cx - c._dir * c._w / 2, c.cy, c._dir), COL[c._tone], c.line === 'dashed');
+        });
+        var by = n._h / 2;
+        addPath('M0 ' + by + 'V' + (by + STUB), COL.plain, false);
+        bubble(n, 0, by + STUB / 2);
+      } else {
+        var dir = n._dir, ex = n.cx + dir * n._w / 2, sx = ex + dir * STUB;
+        var allDash = n._vis.length > 0 && n._vis.every(function(c){ return c.line === 'dashed'; });
+        addPath('M' + ex + ' ' + n.cy + 'H' + sx, COL[n._tone], allDash);
+        n._vis.forEach(function(c){
+          addPath(curve(sx, n.cy, c.cx - dir * c._w / 2, c.cy, dir), COL[c._tone], c.line === 'dashed');
+        });
+        bubble(n, ex + dir * STUB / 2, n.cy);
+      }
+    });
+  }
+
+  function rebuild(){
+    svg.innerHTML = ''; nodesL.innerHTML = ''; bubblesL.innerHTML = ''; all = [];
+    make(current.root, 'plain', [], 0);
+    layout();
+    draw();
+  }
+
+  function render(data){
+    if (!data || !data.root) throw new Error('Липсва поле "root".');
+    current = data; activeData = null;
+    walk(data.root, function(n){ if (n.collapsed === undefined && n.children && n.children.length) n.collapsed = true; });
+    document.title = data.title || 'Схема';
+    $('title').firstChild.nodeValue = data.title || 'Схема';
+    $('subtitle').textContent = data.subtitle || '';
+    closePanel();
+    rebuild();
+    resetView();
+  }
+
+  /* ---------- странични обяснения ---------- */
+  function openPanel(n){
+    var d = n.details, colors = {green:'--g-b', yellow:'--y-b', pink:'--p-b', blue:'--b-b', plain:'--n-b'};
+    document.querySelectorAll('.node.active').forEach(function(x){ x.classList.remove('active'); });
+    activeData = n; n._box.classList.add('active');
+    side.innerHTML = '';
+    var panel = el('div', 'panel'), head = el('div', 'panel-head');
+    head.style.borderTopColor = 'var(' + (colors[n._tone] || '--n-b') + ')';
+    var x = el('button', 'x', '×'); x.setAttribute('aria-label', 'Затвори');
+    x.addEventListener('click', closePanel);
+    head.appendChild(x);
+    head.appendChild(el('h2', null, d.title || n.label));
+    if (d.term) head.appendChild(el('div', 'term', d.term));
+    if (n._path.length > 2) head.appendChild(el('div', 'path', n._path.slice(1, -1).join(' › ')));
+    panel.appendChild(head);
+    var body = el('div', 'panel-body');
+    (d.text || '').split('\n').forEach(function(p){ if (p.trim()) body.appendChild(el('p', null, p)); });
+    if (d.points && d.points.length) {
+      var ul = el('ul');
+      d.points.forEach(function(p){ ul.appendChild(el('li', null, p)); });
+      body.appendChild(ul);
+    }
+    panel.appendChild(body);
+    side.appendChild(panel);
+    side.classList.add('open');
+    var vr = viewport.getBoundingClientRect(), r = n._box.getBoundingClientRect();
+    if (vr.width > 700) {
+      var lim = vr.right - 400 - 24;
+      if (r.right > lim) { view.x -= r.right - lim; animateView(); }
+    }
+  }
+  function closePanel(){
+    side.classList.remove('open');
+    document.querySelectorAll('.node.active').forEach(function(x){ x.classList.remove('active'); });
+    activeData = null;
+  }
+
+  /* ---------- управление ---------- */
+  var pointers = new Map(), panning = false, moved = false, space = false, start = null, last = null, pinch = null;
+  function pinchState(){
+    var a = Array.from(pointers.values());
+    return {d: Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y) || 1, cx: (a[0].x + a[1].x) / 2, cy: (a[0].y + a[1].y) / 2};
+  }
+  viewport.addEventListener('pointerdown', function(e){
+    moved = false;
+    pointers.set(e.pointerId, {x: e.clientX, y: e.clientY});
+    if (pointers.size === 2) { pinch = pinchState(); moved = true; return; }
+    if (e.target.closest('.node,.tog') && !space) return;
+    panning = true; start = last = {x: e.clientX, y: e.clientY};
+    viewport.setPointerCapture(e.pointerId);
+    viewport.classList.add('panning');
+  });
+  viewport.addEventListener('pointermove', function(e){
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, {x: e.clientX, y: e.clientY});
+    if (pointers.size === 2 && pinch) {
+      var s = pinchState(), r = viewport.getBoundingClientRect();
+      zoomAt(s.cx - r.left, s.cy - r.top, s.d / pinch.d);
+      view.x += s.cx - pinch.cx; view.y += s.cy - pinch.cy;
+      pinch = s; applyView();
+    } else if (panning) {
+      view.x += e.clientX - last.x; view.y += e.clientY - last.y;
+      last = {x: e.clientX, y: e.clientY};
+      if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > 4) moved = true;
+      applyView();
+    }
+  });
+  function up(e){
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinch = null;
+    if (pointers.size === 0) { panning = false; viewport.classList.remove('panning'); }
+  }
+  viewport.addEventListener('pointerup', up);
+  viewport.addEventListener('pointercancel', up);
+  viewport.addEventListener('click', function(e){
+    if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; }
+  }, true);
+  viewport.addEventListener('dblclick', function(e){
+    if (!e.target.closest('.node,.tog')) resetView();
+  });
+  viewport.addEventListener('wheel', function(e){
+    e.preventDefault();
+    var dy = e.deltaY * (e.deltaMode === 1 ? 16 : 1);
+    var r = viewport.getBoundingClientRect();
+    zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-dy * (e.ctrlKey ? 0.01 : 0.0015)));
+    applyView();
+  }, {passive: false});
+
+  function setSpace(v){ space = v; viewport.classList.toggle('space', v); }
+  document.addEventListener('keydown', function(e){
+    if (e.code === 'Space') { e.preventDefault(); setSpace(true); }
+    else if (e.key === 'Escape') closePanel();
+  });
+  document.addEventListener('keyup', function(e){
+    if (e.code === 'Space') { e.preventDefault(); setSpace(false); }
+  });
+  window.addEventListener('blur', function(){ setSpace(false); });
+
+  $('btnExp').addEventListener('click', function(){
+    walk(current.root, function(n){ n.collapsed = false; });
+    rebuild(); resetView();
+  });
+  $('btnCol').addEventListener('click', function(){
+    walk(current.root, function(n){ n.collapsed = !!(n.children && n.children.length); });
+    activeData = null; closePanel(); rebuild(); resetView();
+  });
+  $('btnFit').addEventListener('click', resetView);
+  window.addEventListener('resize', resetView);
+
+  document.addEventListener('dragover', function(e){ e.preventDefault(); });
+  document.addEventListener('drop', function(e){
+    e.preventDefault();
+    var f = e.dataTransfer.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try { render(JSON.parse(r.result)); }
+      catch (x) { alert('Невалиден JSON файл: ' + x.message); }
+    };
+    r.readAsText(f, 'utf-8');
+  });
+
+  render(JSON.parse($('data').textContent));
+})();
+</script>
+</body>
+</html>
