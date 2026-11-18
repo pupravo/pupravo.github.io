@@ -1963,7 +1963,7 @@ const EVENTS = [{
     "group": "2",
     "teacher": "ас. М. Шушков",
     "room": "24 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 169,
     "date": "2026-11-11",
@@ -1974,7 +1974,7 @@ const EVENTS = [{
     "group": "6",
     "teacher": "ас. М. Шушков",
     "room": "10 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 170,
     "date": "2026-11-11",
@@ -1985,7 +1985,7 @@ const EVENTS = [{
     "group": "1",
     "teacher": "ас. М. Шушков",
     "room": "10 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 171,
     "date": "2026-11-11",
@@ -1996,7 +1996,7 @@ const EVENTS = [{
     "group": "5",
     "teacher": "ас. М. Шушков",
     "room": "4 ауд.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 172,
     "date": "2026-11-11",
@@ -2007,7 +2007,7 @@ const EVENTS = [{
     "group": "3",
     "teacher": "ас. М. Шушков",
     "room": "20 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 173,
     "date": "2026-11-11",
@@ -2018,7 +2018,7 @@ const EVENTS = [{
     "group": "4",
     "teacher": "ас. М. Шушков",
     "room": "19 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 174,
     "date": "2026-11-12",
@@ -2029,7 +2029,7 @@ const EVENTS = [{
     "group": "Всички",
     "teacher": "доц. д-р Д. Ханев",
     "room": "8 ауд.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 175,
     "date": "2026-11-13",
@@ -2041,7 +2041,7 @@ const EVENTS = [{
     "group": "Всички",
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 176,
     "date": "2026-11-13",
@@ -2052,7 +2052,7 @@ const EVENTS = [{
     "group": "Всички",
     "teacher": "проф. д.ю.н. М. Новкиршка",
     "room": "6 ауд.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 177,
     "date": "2026-11-16",
@@ -2063,7 +2063,7 @@ const EVENTS = [{
     "group": "Всички",
     "teacher": "доц. д-р П. Неделева, доц. д-р Д. Стоянкова",
     "room": "6 ауд.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 178,
     "date": "2026-11-17",
@@ -2074,7 +2074,7 @@ const EVENTS = [{
     "group": "1",
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 179,
     "date": "2026-11-17",
@@ -2085,7 +2085,7 @@ const EVENTS = [{
     "group": "4",
     "teacher": "докт. Й. Танев",
     "room": "7 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 180,
     "date": "2026-11-17",
@@ -2096,7 +2096,7 @@ const EVENTS = [{
     "group": "1",
     "teacher": "гл. ас. д-р Д. Ханев",
     "room": "10 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 181,
     "date": "2026-11-17",
@@ -2107,7 +2107,7 @@ const EVENTS = [{
     "group": "3",
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 182,
     "date": "2026-11-17",
@@ -2118,7 +2118,7 @@ const EVENTS = [{
     "group": "2",
     "teacher": "гл. ас. д-р Д. Ханев",
     "room": "14 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 183,
     "date": "2026-11-17",
@@ -2129,7 +2129,7 @@ const EVENTS = [{
     "group": "4",
     "teacher": "",
     "room": "зала Академик",
-    "note": "Съвместно с гр. 6"
+    "note": "Съвместно с гр. 6", "isPassed" : true
 }, {
     "id": 184,
     "date": "2026-11-17",
@@ -2140,7 +2140,7 @@ const EVENTS = [{
     "group": "5",
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 185,
     "date": "2026-11-17",
@@ -2151,7 +2151,7 @@ const EVENTS = [{
     "group": "6",
     "teacher": "",
     "room": "зала Академик",
-    "note": "Съвместно с гр. 4"
+    "note": "Съвместно с гр. 4", "isPassed" : true
 }, {
     "id": 186,
     "date": "2026-11-17",
@@ -2162,7 +2162,7 @@ const EVENTS = [{
     "group": "1",
     "teacher": "",
     "room": "зала Академик",
-    "note": "Съвместно с гр. 3"
+    "note": "Съвместно с гр. 3", "isPassed" : true
 }, {
     "id": 187,
     "date": "2026-11-17",
@@ -2173,7 +2173,7 @@ const EVENTS = [{
     "group": "2",
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 188,
     "date": "2026-11-17",
@@ -2184,7 +2184,7 @@ const EVENTS = [{
     "group": "3",
     "teacher": "",
     "room": "зала Академик",
-    "note": "Съвместно с гр. 1"
+    "note": "Съвместно с гр. 1", "isPassed" : true
 }, {
     "id": 189,
     "date": "2026-11-17",
@@ -2195,7 +2195,7 @@ const EVENTS = [{
     "group": "5",
     "teacher": "д-р К. Илчев",
     "room": "11 ауд.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 190,
     "date": "2026-11-17",
@@ -2206,7 +2206,7 @@ const EVENTS = [{
     "group": "2",
     "teacher": "",
     "room": "зала Академик",
-    "note": "Съвместно с гр. 5"
+    "note": "Съвместно с гр. 5", "isPassed" : true
 }, {
     "id": 191,
     "date": "2026-11-17",
@@ -2217,7 +2217,7 @@ const EVENTS = [{
     "group": "4",
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 192,
     "date": "2026-11-17",
@@ -2228,7 +2228,7 @@ const EVENTS = [{
     "group": "5",
     "teacher": "",
     "room": "зала Академик",
-    "note": "Съвместно с гр. 2"
+    "note": "Съвместно с гр. 2", "isPassed" : true
 }, {
     "id": 193,
     "date": "2026-11-17",
@@ -2239,7 +2239,7 @@ const EVENTS = [{
     "group": "6",
     "teacher": "д-р К. Илчев",
     "room": "10 ауд.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 194,
     "date": "2026-11-17",
@@ -2250,7 +2250,7 @@ const EVENTS = [{
     "group": "3",
     "teacher": "д-р К. Илчев",
     "room": "9 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 195,
     "date": "2026-11-17",
@@ -2261,7 +2261,7 @@ const EVENTS = [{
     "group": "6",
     "teacher": "ас. М. Шушков",
     "room": "25 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 196,
     "date": "2026-11-18",
@@ -2272,7 +2272,7 @@ const EVENTS = [{
     "group": "2",
     "teacher": "ас. М. Шушков",
     "room": "24 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 197,
     "date": "2026-11-18",
@@ -2283,7 +2283,7 @@ const EVENTS = [{
     "group": "6",
     "teacher": "ас. М. Шушков",
     "room": "10 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 198,
     "date": "2026-11-18",
@@ -2294,7 +2294,7 @@ const EVENTS = [{
     "group": "1",
     "teacher": "ас. М. Шушков",
     "room": "10 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 199,
     "date": "2026-11-18",
@@ -2305,7 +2305,7 @@ const EVENTS = [{
     "group": "5",
     "teacher": "ас. М. Шушков",
     "room": "4 ауд.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 200,
     "date": "2026-11-18",
@@ -2316,7 +2316,7 @@ const EVENTS = [{
     "group": "3",
     "teacher": "ас. М. Шушков",
     "room": "20 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 201,
     "date": "2026-11-18",
@@ -2327,7 +2327,7 @@ const EVENTS = [{
     "group": "4",
     "teacher": "ас. М. Шушков",
     "room": "19 с.з.",
-    "note": ""
+    "note": "", "isPassed" : true
 }, {
     "id": 202,
     "date": "2026-11-19",
