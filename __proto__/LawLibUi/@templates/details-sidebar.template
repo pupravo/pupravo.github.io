@@ -1,0 +1,57 @@
+<div class="sec">
+    <button class="head">Environment
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+    </button>
+    <div class="content">
+    <div class="rw">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="3.5" width="11" height="7" rx="1"/><path d="M1.5 12.5h13"/></svg>
+        <span class="k">This computer</span><span class="link">Save</span>
+    </div>
+    <div class="rw">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 4.5a1 1 0 0 1 1-1h3.2l1.4 1.5h6.4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1z"/></svg>
+        <span class="k">arclayer-studio <span class="v">· E:</span></span>
+    </div>
+    <div class="rw">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="4.5" y="1.5" width="7" height="13" rx="1.5"/><path d="M7 12.5h2"/></svg>
+        <span class="k">Remote Control</span>
+        <button class="switch on" role="switch" aria-checked="true" aria-label="Remote control"></button>
+    </div>
+    </div>
+</div>
+
+<div class="sec">
+    <button class="head">Context
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+    </button>
+    <div class="content">
+    <div class="total"><span>9% used</span><span style="color:var(--dim)">92k / 1M</span></div>
+    <div class="meter">
+        <i style="background:#6ea8fe;width:4.08%"></i>
+        <i style="background:#a78bfa;width:6.12%"></i>
+        <i style="background:#4ade80;width:17.68%"></i>
+        <i style="background:#f5a524;width:3.4%"></i>
+    </div>
+    <div class="leg"><i style="background:#6ea8fe"></i><span class="k">System prompt</span><span class="n">12k</span><span class="p">1.2%</span></div>
+    <div class="leg"><i style="background:#a78bfa"></i><span class="k">Tools</span><span class="n">18k</span><span class="p">1.8%</span></div>
+    <div class="leg"><i style="background:#4ade80"></i><span class="k">Messages</span><span class="n">52k</span><span class="p">5.2%</span></div>
+    <div class="leg"><i style="background:#f5a524"></i><span class="k">Files</span><span class="n">10k</span><span class="p">1.0%</span></div>
+    </div>
+</div>
+
+<div class="sec">
+    <button class="head">Connectors
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+    </button>
+    <div class="content">
+    <div class="rw"><span class="cn">G</span><span class="k">Google Drive</span><span class="ok">Connected</span></div>
+    <div class="rw"><span class="cn">N</span><span class="k">Notion</span><span class="ok">Connected</span></div>
+    <div class="rw"><span class="cn">GH</span><span class="k">GitHub</span><span class="auth">Authenticate</span></div>
+    </div>
+</div>
+
+<div class="sec closed">
+    <button class="head">Outputs
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+    </button>
+    <div class="content"><div class="rw"><span class="v">Nothing yet</span></div></div>
+</div>

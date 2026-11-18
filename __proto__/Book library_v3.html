@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Book library</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme:light)").matches?"light":"dark")}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<style>
+:root{
+  --bg:#171716;--panel:#1c1c1b;--card:#1f1f1e;--raised:#2b2b2a;--hover:#242423;--line:#2a2a28;
+  --text:#ececea;--dim:#9a9a96;--faint:#6d6d69;--accent:#e8693a;--blue:#5b7cf0;--amber:#e0a93b;
+  --pur:#5547e6;--pur-bg:rgba(124,108,255,.16);--pur-tx:#b3a9ff;--red:#e03a4a;
+  --spring:cubic-bezier(.2,.9,.25,1);
+  color-scheme:dark;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="light"]{--bg:#f4f3f8;--panel:#eceaf2;--card:#fff;--raised:#e6e4ee;--hover:#e9e7f0;--line:#e0deea;--text:#1b1b1f;--dim:#6b6b76;--faint:#9a9aa6;--pur-bg:#e6e2ff;--pur-tx:#3f33c4;color-scheme:light}
+body{transition:background-color .3s,color .3s}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:left}
+button:active{transform:scale(.97);transition:transform 100ms ease-out}
+svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.app{display:grid;grid-template-rows:52px minmax(0,1fr);height:100%}
+.topbar{display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid var(--line);color:var(--dim)}
+.ib{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;transition:background .15s}
+.ib:hover{background:var(--hover);color:var(--text)}
+.seg{display:flex;background:var(--panel);border-radius:9px;padding:2px;margin-left:8px}
+.seg .ib{width:44px;height:30px}.seg .on{background:var(--raised);color:var(--text)}
+.title{color:var(--text);font-weight:500;margin:0 auto 0 28px;display:flex;align-items:center;gap:6px;letter-spacing:-.01em}
+.body{display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:215px 1fr 475px;min-height:0;transition:grid-template-columns .45s var(--spring)}
+.body.no-l{grid-template-columns:0 1fr 475px}.body.no-r{grid-template-columns:215px 1fr 0}.body.no-l.no-r{grid-template-columns:0 1fr 0}
+aside{overflow:auto;min-width:0}
+.left{padding:20px 12px;border-right:1px solid var(--line)}
+.right{padding:8px 16px 20px;border-left:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:14px;width:100%;padding:11px 14px;border-radius:10px;font-size:16px;white-space:nowrap;transition:background .15s}
+.nav:hover{background:var(--hover)}.nav.on{background:var(--raised)}.nav svg{color:var(--dim)}
+.label{display:flex;align-items:center;gap:6px;color:var(--faint);font-size:14px;margin:26px 14px 8px}
+.label svg{width:13px;height:13px}
+main{min-width:0;min-height:0;display:flex;flex-direction:column}
+.scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:32px 28px 48px}
+.lib{max-width:960px;margin:0 auto}
+/* filters */
+.filters{display:flex;gap:18px;flex-wrap:wrap}
+.search{flex:1 1 280px;max-width:360px;display:flex;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:0 16px;transition:border-color .2s,box-shadow .2s}
+.search:focus-within{border-color:var(--pur);box-shadow:0 0 0 4px var(--pur-bg)}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font:inherit;padding:15px 0}
+.search input::placeholder{color:var(--faint)}.search svg{color:var(--dim)}
+.sel{position:relative;flex:0 1 200px}
+.sel select{appearance:none;width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;padding:15px 40px 15px 16px;cursor:pointer;outline:0}
+.sel select:focus-visible{border-color:var(--pur)}
+.sel svg{position:absolute;right:14px;top:50%;margin-top:-9px;pointer-events:none;color:var(--dim)}
+/* tabs + carousel */
+.tabs{display:flex;gap:28px;margin:40px 0 16px}
+.tab{color:var(--faint);padding:2px 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+.tab.on{color:var(--text);font-weight:600;border-color:var(--pur)}
+.car{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 2px 8px}
+.car::-webkit-scrollbar{display:none}
+.bk{flex:0 0 150px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;transition:transform .35s var(--spring),border-color .2s}
+.bk:hover{transform:translateY(-3px);border-color:var(--faint)}
+.cv{aspect-ratio:1/1.1;border-radius:3px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700;font-size:13px;line-height:1.1;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.bt{font-size:12.5px;line-height:1.35;margin:12px 0 6px;height:34px;overflow:hidden}
+.ba{font-size:12.5px;font-weight:600}.br{font-size:13px;font-weight:600;margin-top:6px}
+.br span,.rt span{color:var(--dim);font-weight:400}
+.ctl{display:flex;align-items:center;gap:22px;margin:18px 0 8px}
+.ctl .ib{color:var(--text)}
+.track{flex:0 1 150px;height:2px;background:var(--line);position:relative;border-radius:2px}
+.track i{position:absolute;top:0;height:100%;background:var(--pur);border-radius:2px;transition:left .15s,width .15s}
+/* table */
+.tw{overflow-x:auto;margin-top:34px}
+.tbl{min-width:680px}
+.g{display:grid;grid-template-columns:2.7fr .6fr 1.3fr 1.9fr;align-items:center;gap:14px;padding:0 18px}
+.th{color:var(--dim);font-size:13.5px;padding-bottom:12px}
+.th button{display:inline-flex;align-items:center;gap:6px;color:var(--dim)}.th svg{width:12px;height:12px}
+.row{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;padding-top:12px;padding-bottom:12px;animation:pop .4s var(--spring) both}
+.ti{display:flex;align-items:center;gap:16px;min-width:0}
+.ti .cv{width:42px;aspect-ratio:auto;height:50px;font-size:6px;padding:3px;flex:none;box-shadow:none}
+.ti p{font-size:13.5px;line-height:1.35}.ti b{display:block;font-size:13.5px;margin-top:4px}
+.rt{font-weight:600;font-size:14px}
+.cat{display:flex;align-items:center;gap:12px;color:var(--dim);font-size:13.5px}
+.dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;flex:none}
+.st{width:100%;max-width:240px;padding:11px 12px;border-radius:6px;text-align:center;font-weight:600;font-size:13px;line-height:1.25;transition:filter .15s}
+.st:hover{filter:brightness(1.12)}.st small{display:block;font-size:10px;font-weight:400;opacity:.85}
+.take{background:var(--pur-bg);color:var(--pur-tx)}
+.ret{background:var(--pur);color:#fff}.ret.late{background:var(--red)}
+.who{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--dim)}
+.who b{display:block;color:var(--text);font-size:13px}
+.av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;font-size:13px;flex:none}
+.bell{margin-left:auto;width:28px;height:28px;border-radius:50%;background:var(--raised);color:var(--dim);display:grid;place-items:center;position:relative;transition:background .2s,color .2s}
+.bell.on{background:var(--pur);color:#fff}.bell svg{width:14px;height:14px}
+.bell::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);right:-6px;background:var(--card);color:var(--dim);border:1px solid var(--line);font-size:11px;line-height:1.3;padding:7px 12px;border-radius:8px;width:92px;text-align:center;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .2s,transform .3s var(--spring);z-index:2}
+.bell:hover::after{opacity:1;transform:none}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:18px;color:var(--dim);font-size:13.5px}
+.pages{display:flex;gap:6px;align-items:center}
+.pg{min-width:34px;height:34px;padding:0 8px;border-radius:8px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--text);text-align:center;font-size:13.5px;transition:border-color .2s,background .2s}
+.pg:hover:not(:disabled){border-color:var(--pur)}.pg.on{background:var(--pur);border-color:var(--pur);color:#fff;font-weight:600}.pg:disabled{opacity:.4;cursor:default}
+.pg svg{width:15px;height:15px}.dots{padding:0 4px}
+.per{display:flex;align-items:center;gap:10px}
+.per select{background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit;padding:6px 8px;cursor:pointer;outline:0}
+.empty{padding:40px;text-align:center;color:var(--faint)}
+/* right panel */
+.sec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-top:14px}
+.head{display:flex;align-items:center;gap:6px;font-weight:600;font-size:17px;width:100%;margin-bottom:14px;letter-spacing:-.01em}
+.head svg{width:13px;height:13px;color:var(--dim);transition:transform .3s var(--spring)}
+.sec.closed .head svg{transform:rotate(-90deg)}.sec.closed .content{display:none}.sec.closed .head{margin-bottom:0}
+.rw{display:flex;align-items:center;gap:14px;padding:9px 0;font-size:16px}
+.rw .k{flex:1}.rw .v{color:var(--dim)}.rw svg{color:var(--dim)}
+.link{text-decoration:underline;text-underline-offset:3px}
+.switch{width:48px;height:28px;border-radius:99px;background:var(--raised);position:relative;transition:background .25s;flex:none}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .3s var(--spring)}
+.switch.on{background:var(--blue)}.switch.on::after{transform:translateX(20px)}
+.meter{display:flex;gap:3px;height:4px;border-radius:9px;overflow:hidden;background:var(--raised);margin:10px 0 18px}
+.meter i{display:block;height:100%;transition:width .8s var(--spring)}
+.leg{display:flex;align-items:center;gap:14px;padding:7px 0;font-size:16px}
+.leg i{width:14px;height:14px;border-radius:4px;flex:none}.leg .k{flex:1;color:var(--dim)}.leg .n,.leg .p{color:var(--dim);font-variant-numeric:tabular-nums;width:56px;text-align:right}
+.total{display:flex;justify-content:space-between;font-size:17px;font-weight:500}
+.cn{width:24px;height:24px;border-radius:6px;background:var(--raised);display:grid;place-items:center;font-size:11px;color:var(--dim);flex:none}
+.ok{color:var(--dim)}.auth{color:var(--amber);font-weight:500}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (max-width:1180px){.body{grid-template-columns:215px 1fr 0}.body.no-l{grid-template-columns:0 1fr 0}.right{display:none}.body.show-r{grid-template-columns:0 1fr 100%}.body.show-r .right{display:block}.body.show-r main{display:none}}
+@media (max-width:760px){.body,.body.no-r{grid-template-columns:0 1fr 0}.body.show-l{grid-template-columns:100% 0 0}.body.show-l main{display:none}.left{border:0}.title{margin-left:8px;font-size:14px}.seg{display:none}.scroll{padding:20px 16px 40px}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media (prefers-reduced-transparency:reduce){:root{--card:var(--panel)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar" id="topbar"></header>
+  <div class="body" id="body">
+    <aside class="left"><div id="nav"></div><div id="pinned"></div></aside>
+    <main><div class="scroll"><div class="lib" id="lib"></div></div></main>
+    <aside class="right" id="right"></aside>
+  </div>
+</div>
+<script>
+// ---------- constants (defined once) ----------
+const I = p => `<svg viewBox="0 0 24 24">${p}</svg>`;
+const ICON = {
+  menu:I('<path d="M4 7h16M4 12h16M4 17h10"/>'),side:I('<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/>'),
+  back:I('<path d="M15 6l-6 6 6 6"/>'),fwd:I('<path d="M9 6l6 6-6 6"/>'),
+  chat:I('<path d="M5 5h14a2 2 0 012 2v8a2 2 0 01-2 2h-7l-5 4v-4H5a2 2 0 01-2-2V7a2 2 0 012-2z"/>'),code:I('<path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/>'),
+  caret:I('<path d="M6 9l6 6 6-6"/>'),panel:I('<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M14 4v16"/>'),
+  term:I('<path d="M5 8l5 4-5 4M13 17h6"/>'),dl:I('<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'),
+  globe:I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'),
+  folder:I('<path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>'),
+  plus:I('<path d="M12 5v14M5 12h14"/>'),search:I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>'),
+  doc:I('<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M3 7v12a2 2 0 002 2"/>'),
+  clock:I('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),brief:I('<rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"/>'),
+  phone:I('<rect x="8" y="3" width="8" height="18" rx="2"/><path d="M11 18h2"/>'),laptop:I('<rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2 20h20"/>'),
+  bell:I('<path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 21h4"/>'),
+  arrL:I('<path d="M20 12H4M10 6l-6 6 6 6"/>'),arrR:I('<path d="M4 12h16M14 6l6 6-6 6"/>'),sun:I('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>'),moon:I('<path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/>'),sort:I('<path d="M8 4v16M4 16l4 4 4-4M16 20V4M12 8l4-4 4 4"/>')
+};
+const TITLE = 'Book library';
+const NAV = [['plus','New'],['search','Search'],['doc','Artifacts'],['clock','Scheduled'],['brief','Customize']];
+const PINNED = ['Book library','Channel scripts'];
+const CATS = {D:['Design & UX','#5b7cf0'],P:['Programming','#9b6cf6'],B:['Business & Management','#3bb08f'],R:['Recruitment','#e0607e']};
+const PEOPLE = {mb:['Manuel Blake','#8a5a44'],mp:['Margaret Powers','#d4607a'],ar:['Alex Rivera','#3f7ccc'],ls:['Lena Stoyanova','#2f9e7a'],dk:['Daniel Kim','#8a63c9'],ni:['Nikolay Ivanov','#c9843f']};
+const LOAN_DAYS = 14;
+const TABS = [['rec','Recommended'],['new','Last added']];
+// s: free | mine | late | taken ; d = days; n = notify
+const BOOKS = [
+ {id:1,t:'Super-Modified: The Behance Book of Creative Work',a:'Ash Maurya',c:'D',r:4.5,s:'taken',p:'mb',ago:'20 days ago',n:1,bg:'linear-gradient(135deg,#e8553d,#f4b392)',fg:'#1b1b1b',cover:'let me pencil you in'},
+ {id:2,t:'Scaling Lean: Mastering the Key Metrics for Startup Growth',a:'Ash Maurya',c:'D',r:4.5,s:'free',bg:'#2a5bd7',fg:'#fff',cover:'Life’s a pitch'},
+ {id:3,t:'The Zero Marginal Cost Society',a:'Michael C. Feathers',c:'P',r:3.5,s:'mine',d:8,bg:'#111',fg:'#fff',cover:'LOGO DESIGN'},
+ {id:4,t:'Working Effectively with Legacy Code',a:'Michael C. Feathers',c:'B',r:4.5,s:'taken',p:'mp',ago:'3 days ago',n:0,bg:'#2b8a8a',fg:'#fff',cover:'historia projektowania'},
+ {id:5,t:'The Complete Recruitment Survival Guide',a:'Frankie Bagnardi',c:'R',r:4.5,s:'late',bg:'#7a4b8a',fg:'#fff',cover:'Recruitment Survival'},
+ {id:6,t:'Change by Design',a:'Tim Brown',c:'B',r:4.5,s:'free',bg:'#b3202a',fg:'#fff',cover:'CHANGE BY DESIGN'},
+ {id:7,t:'Ethereum',a:'Chase Thornton',c:'P',r:4.5,s:'free',bg:'#101018',fg:'#cfd2e8',cover:'ETHEREUM'},
+ {id:8,t:'Applied Artificial Intelligence',a:'Francis Salazar',c:'P',r:4.5,s:'free',bg:'#2a9aa0',fg:'#fff',cover:'Applied AI'},
+ {id:9,t:'Unlimited Memory',a:'Kevin Horsley',c:'D',r:4.5,s:'free',bg:'#e9742c',fg:'#fff',cover:'UNLIMITED MEMORY'},
+ {id:10,t:'The New Business Road Test',a:'Susie Hunt',c:'B',r:4.5,s:'free',bg:'#d9dadd',fg:'#c0392b',cover:'THE NEW BUSINESS ROAD TEST'},
+ {id:11,t:'Clean Architecture',a:'Robert C. Martin',c:'P',r:4.5,s:'taken',p:'ar',ago:'12 days ago',n:0,bg:'#1d3557',fg:'#f1faee',cover:'Clean Architecture'},
+ {id:12,t:'Don’t Make Me Think',a:'Steve Krug',c:'D',r:4.5,s:'free',bg:'#f4c430',fg:'#222',cover:'Don’t Make Me Think'},
+ {id:13,t:'The Pragmatic Programmer',a:'Andrew Hunt',c:'P',r:5,s:'free',bg:'#2d6a4f',fg:'#fff',cover:'The Pragmatic Programmer'},
+ {id:14,t:'Designing Data-Intensive Applications',a:'Martin Kleppmann',c:'P',r:5,s:'mine',d:3,bg:'#264653',fg:'#e9c46a',cover:'Data-Intensive Applications'},
+ {id:15,t:'The Lean Startup',a:'Eric Ries',c:'B',r:4,s:'taken',p:'ls',ago:'5 days ago',n:1,bg:'#ffffff',fg:'#111',cover:'THE LEAN STARTUP'},
+ {id:16,t:'Hooked: How to Build Habit-Forming Products',a:'Nir Eyal',c:'B',r:4,s:'free',bg:'#6a0572',fg:'#fff',cover:'HOOKED'},
+ {id:17,t:'Hire with Your Head',a:'Lou Adler',c:'R',r:3.5,s:'late',bg:'#344e41',fg:'#dad7cd',cover:'Hire with Your Head'},
+ {id:18,t:'Who: The A Method for Hiring',a:'Geoff Smart',c:'R',r:4.5,s:'free',bg:'#d62828',fg:'#fff',cover:'WHO'},
+ {id:19,t:'About Face: Essentials of Interaction Design',a:'Alan Cooper',c:'D',r:4,s:'taken',p:'dk',ago:'1 day ago',n:0,bg:'#0b132b',fg:'#6fffe9',cover:'About Face'},
+ {id:20,t:'Refactoring',a:'Martin Fowler',c:'P',r:4.5,s:'free',bg:'#3a86ff',fg:'#fff',cover:'Refactoring'},
+ {id:21,t:'The Mythical Man-Month',a:'Frederick Brooks',c:'B',r:4,s:'taken',p:'ni',ago:'27 days ago',n:1,bg:'#8d6e63',fg:'#fff',cover:'The Mythical Man-Month'},
+ {id:22,t:'Atomic Design',a:'Brad Frost',c:'D',r:4.5,s:'free',bg:'#ff7aa2',fg:'#fff',cover:'Atomic Design'},
+ {id:23,t:'Domain-Driven Design',a:'Eric Evans',c:'P',r:4,s:'mine',d:11,bg:'#1b4332',fg:'#b7e4c7',cover:'Domain-Driven Design'},
+ {id:24,t:'High Output Management',a:'Andrew Grove',c:'B',r:5,s:'free',bg:'#222',fg:'#f2f2f2',cover:'HIGH OUTPUT MANAGEMENT'},
+ {id:25,t:'Cracking the PM Interview',a:'Gayle McDowell',c:'R',r:3.5,s:'taken',p:'mp',ago:'9 days ago',n:0,bg:'#ffb703',fg:'#111',cover:'Cracking the PM Interview'}
+];
+const CONTEXT = [['Messages','#5b7cf0',24.8,2.5],['Memory files','#e8693a',38.2,3.8],['System tools','#3bb08f',17.2,1.7],['MCP tools','#e0a93b',11.6,1.2]];
+const CONNECTORS = [['G','Gmail',1],['D','Google Drive',1],['N','Notion',0]];
+const PAGE_SIZES = [5, 8, 10, 15];
+const state = {tab:'rec',q:'',cat:'',dir:0,page:1,size:8};
+const $ = id => document.getElementById(id);
+const fmt = r => `${String(r).replace('.',',')}<span>/5</span>`;
+const initials = n => n.split(' ').map(w=>w[0]).join('');
+
+// ---------- templates ----------
+const cover = b => `<div class="cv" style="background:${b.bg};color:${b.fg}">${b.cover}</div>`;
+const card = b => `<article class="bk">${cover(b)}<p class="bt">${b.t}</p><p class="ba">${b.a}</p><p class="br">${fmt(b.r)}</p></article>`;
+const status = b => ({
+  free:`<button class="st take" data-take="${b.id}">Take book</button>`,
+  mine:`<button class="st ret" data-ret="${b.id}">Return book<small>You have ${b.d} days left</small></button>`,
+  late:`<button class="st ret late" data-ret="${b.id}">Return book<small>You exceeded the time</small></button>`,
+  taken:`<div class="who"><span class="av" style="background:${PEOPLE[b.p]?.[1]}">${initials(PEOPLE[b.p]?.[0]||'')}</span><span>Taken ${b.ago}<b>${PEOPLE[b.p]?.[0]}</b></span><button class="bell${b.n?' on':''}" data-tip="Notify when returned" data-bell="${b.id}" aria-label="Notify when returned">${ICON.bell}</button></div>`
+}[b.s]);
+const rowHTML = (b,i) => `<div class="g row" style="animation-delay:${i*35}ms">
+  <div class="ti">${cover(b)}<div><p>${b.t}</p><b>${b.a}</b></div></div>
+  <div class="rt">${fmt(b.r)}</div>
+  <div class="cat"><span class="dot" style="background:${CATS[b.c][1]}33;color:${CATS[b.c][1]}">${b.c}</span>${CATS[b.c][0]}</div>
+  <div>${status(b)}</div></div>`;
+
+$('lib').innerHTML = `
+  <div class="filters">
+    <label class="search"><input id="q" placeholder="Type book name or author" autocomplete="off">${ICON.search}</label>
+    <div class="sel"><select id="cat"><option value="">Category</option>${Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join('')}</select>${ICON.caret}</div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="car" id="car"></div>
+  <div class="ctl"><button class="ib" id="prev" aria-label="Previous">${ICON.arrL}</button><div class="track"><i id="thumb"></i></div><button class="ib" id="next" aria-label="Next">${ICON.arrR}</button></div>
+  <div class="tw"><div class="tbl">
+    <div class="g th"><button data-sort>Title ${ICON.sort}</button><span>Rating</span><span>Category</span><span>Status</span></div>
+    <div id="rows"></div>
+  </div></div>
+  <div class="pager" id="pager"></div>`;
+
+const matches = b => (!state.cat || b.c===state.cat) && (b.t+' '+b.a).toLowerCase().includes(state.q);
+const drawTabs = () => $('tabs').innerHTML = TABS.map(([k,t])=>`<button class="tab${state.tab===k?' on':''}" data-tab="${k}">${t}</button>`).join('');
+const drawCar = () => {
+  const list = BOOKS.filter(matches);
+  $('car').innerHTML = (state.tab==='new' ? [...list].reverse() : list).map(card).join('') || '<p class="empty">No books found</p>';
+  $('car').scrollTo({left:0}); thumb();
+};
+const pageList = (cur, total) => {
+  if (total <= 7) return Array.from({length:total}, (_, i) => i + 1);
+  const set = new Set([1, total, cur - 1, cur, cur + 1]);
+  const nums = [...set].filter(n => n >= 1 && n <= total).sort((a, b) => a - b);
+  return nums.flatMap((n, i) => i && n - nums[i - 1] > 1 ? ['…', n] : [n]);
+};
+const pagerHTML = (total, pages) => {
+  const from = total ? (state.page - 1) * state.size + 1 : 0, to = Math.min(total, state.page * state.size);
+  return `<div class="per">Rows per page <select id="size">${PAGE_SIZES.map(n=>`<option${n===state.size?' selected':''}>${n}</option>`).join('')}</select><span>${from}–${to} of ${total}</span></div>
+  <nav class="pages" aria-label="Pagination">
+    <button class="pg" data-page="${state.page-1}" ${state.page<=1?'disabled':''} aria-label="Previous page">${ICON.back}</button>
+    ${pageList(state.page, pages).map(n => n==='…' ? '<span class="dots">…</span>' : `<button class="pg${n===state.page?' on':''}" data-page="${n}" ${n===state.page?'aria-current="page"':''}>${n}</button>`).join('')}
+    <button class="pg" data-page="${state.page+1}" ${state.page>=pages?'disabled':''} aria-label="Next page">${ICON.fwd}</button>
+  </nav>`;
+};
+const drawRows = () => {
+  const list = BOOKS.filter(matches).sort((a,b)=>state.dir*a.t.localeCompare(b.t) || a.id-b.id);
+  const pages = Math.max(1, Math.ceil(list.length / state.size));
+  state.page = Math.min(Math.max(1, state.page), pages);
+  const start = (state.page - 1) * state.size;
+  $('rows').innerHTML = list.slice(start, start + state.size).map(rowHTML).join('') || '<p class="empty">No books found</p>';
+  $('pager').innerHTML = pagerHTML(list.length, pages);
+};
+const thumb = () => {
+  const c = $('car'), t = $('thumb'), w = c.scrollWidth || 1;
+  t.style.width = Math.min(100, c.clientWidth/w*100) + '%';
+  t.style.left = c.scrollLeft/w*100 + '%';
+};
+drawTabs(); drawCar(); drawRows();
+
+// ---------- shell ----------
+$('topbar').innerHTML = `
+  <button class="ib" data-act="left" aria-label="Menu">${ICON.menu}</button>
+  <button class="ib" data-act="left" aria-label="Sidebar">${ICON.side}</button>
+  <button class="ib" aria-label="Back">${ICON.back}</button><button class="ib" aria-label="Forward">${ICON.fwd}</button>
+  <div class="seg"><button class="ib" aria-label="Chat">${ICON.chat}</button><button class="ib on" aria-label="Code">${ICON.code}</button></div>
+  <div class="title">${TITLE}</div>
+  <button class="ib" data-act="theme" id="themeBtn"></button>
+  <button class="ib" data-act="right" aria-label="Panel">${ICON.panel}</button>
+  <button class="ib" aria-label="Terminal">${ICON.term}</button><button class="ib" aria-label="Download">${ICON.dl}</button>
+  <button class="ib" aria-label="Browser">${ICON.globe}</button><button class="ib" aria-label="Files">${ICON.folder}</button>`;
+$('nav').innerHTML = NAV.map(([i,t],n)=>`<button class="nav" data-nav="${n}">${ICON[i]}${t}</button>`).join('');
+$('pinned').innerHTML = `<div class="label">Pinned ${ICON.caret}</div>` + PINNED.map((t,n)=>`<button class="nav pin${n?'':' on'}">${ICON.code}${t}</button>`).join('');
+$('right').innerHTML = `
+  <div class="sec"><button class="head">Environment ${ICON.caret}</button><div class="content">
+    <div class="rw">${ICON.laptop}<span class="k">This computer</span><span class="link">Save</span></div>
+    <div class="rw">${ICON.folder}<span class="k">arclayer-studio <span class="v">· E:</span></span></div>
+    <div class="rw">${ICON.phone}<span class="k">Remote Control</span><button class="switch on" role="switch" aria-checked="true" aria-label="Remote control"></button></div></div></div>
+  <div class="sec"><button class="head">Context ${ICON.caret}</button><div class="content">
+    <div class="total"><span>9% used</span><span style="color:var(--dim)">92k / 1M</span></div>
+    <div class="meter" id="meter">${CONTEXT.map(c=>`<i style="background:${c[1]};width:0" data-w="${c[3]*3.4}"></i>`).join('')}</div>
+    ${CONTEXT.map(([k,c,n,p])=>`<div class="leg"><i style="background:${c}"></i><span class="k">${k}</span><span class="n">${n}k</span><span class="p">${p}%</span></div>`).join('')}</div></div>
+  <div class="sec"><button class="head">Connectors ${ICON.caret}</button><div class="content">
+    ${CONNECTORS.map(([l,n,ok])=>`<div class="rw"><span class="cn">${l}</span><span class="k">${n}</span><span class="${ok?'ok':'auth'}">${ok?'Connected':'Authenticate'}</span></div>`).join('')}</div></div>
+  <div class="sec closed"><button class="head">Outputs ${ICON.caret}</button><div class="content"><div class="rw"><span class="v">Nothing yet</span></div></div></div>`;
+requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll('#meter i').forEach(e=>e.style.width=e.dataset.w+'%'),60));
+
+// ---------- behavior ----------
+const THEME_KEY = 'theme';
+const body = $('body');
+const setTheme = (t, save) => {
+  document.documentElement.dataset.theme = t;
+  $('themeBtn').innerHTML = t === 'dark' ? ICON.sun : ICON.moon;
+  $('themeBtn').setAttribute('aria-label', t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  if (save) try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+};
+setTheme(document.documentElement.dataset.theme || 'dark');
+const wide = () => matchMedia('(min-width:1181px)').matches;
+const find = id => BOOKS.find(b=>b.id===+id);
+
+document.addEventListener('click', e => {
+  const t = e.target, hit = s => t.closest(s);
+  const act = hit('[data-act]')?.dataset.act;
+  if (act==='left') matchMedia('(max-width:760px)').matches ? body.classList.toggle('show-l') : body.classList.toggle('no-l');
+  if (act==='theme') setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark', true);
+  if (act==='right') wide() ? body.classList.toggle('no-r') : body.classList.toggle('show-r');
+  if (hit('.head')) hit('.head').parentElement.classList.toggle('closed');
+  if (hit('.switch')) { const s = hit('.switch'); s.classList.toggle('on'); s.setAttribute('aria-checked', s.classList.contains('on')); }
+  if (hit('.pin')) { document.querySelectorAll('.pin').forEach(p=>p.classList.remove('on')); hit('.pin').classList.add('on'); }
+  if (hit('[data-nav]')) { document.querySelectorAll('[data-nav]').forEach(p=>p.classList.remove('on')); hit('[data-nav]').classList.add('on'); }
+  if (hit('[data-tab]')) { state.tab = hit('[data-tab]').dataset.tab; drawTabs(); drawCar(); }
+  if (hit('[data-sort]')) { state.dir = state.dir===1 ? -1 : 1; state.page = 1; drawRows(); }
+  if (hit('[data-page]') && !hit('[data-page]').disabled) { state.page = +hit('[data-page]').dataset.page; drawRows(); document.querySelector('.tw').scrollIntoView({behavior:'smooth',block:'start'}); }
+  if (hit('#prev')) $('car').scrollBy({left:-$('car').clientWidth*.8,behavior:'smooth'});
+  if (hit('#next')) $('car').scrollBy({left:$('car').clientWidth*.8,behavior:'smooth'});
+  if (hit('[data-take]')) { Object.assign(find(hit('[data-take]').dataset.take),{s:'mine',d:LOAN_DAYS}); drawRows(); }
+  if (hit('[data-ret]'))  { find(hit('[data-ret]').dataset.ret).s = 'free'; drawRows(); }
+  if (hit('[data-bell]')) { const b = find(hit('[data-bell]').dataset.bell); b.n = b.n ? 0 : 1; drawRows(); }
+});
+$('pager').addEventListener('change', e => { if (e.target.id === 'size') { state.size = +e.target.value; state.page = 1; drawRows(); } });
+$('car').addEventListener('scroll', thumb, {passive:true});
+addEventListener('resize', thumb);
+$('q').addEventListener('input', e => { state.q = e.target.value.trim().toLowerCase(); state.page = 1; drawCar(); drawRows(); });
+$('cat').addEventListener('change', e => { state.cat = e.target.value; state.page = 1; drawCar(); drawRows(); });
+</script>
+</body>
+</html>

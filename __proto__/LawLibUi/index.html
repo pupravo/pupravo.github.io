@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Правна библиотека</title>
+  <script>
+    try {
+      document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme:light)").matches ? "light" : "dark")
+    }
+    catch (e) {
+      document.documentElement.dataset.theme = "dark"
+    }
+  </script>
+  <link rel="stylesheet" href="style/styles.css">
+</head>
+
+<body>
+  <div class="app">
+
+    <header class="topbar" id="topbar">
+      <button class="ib" data-act="left" aria-label="Sidebar">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="16" rx="3" />
+          <path d="M9 4v16" />
+        </svg>
+      </button>
+
+      <div class="title">Правна Библиотека</div>
+      <button class="ib" data-act="theme" id="themeBtn"></button>
+      <button class="ib" data-act="right" aria-label="Panel">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="16" rx="3" />
+          <path d="M14 4v16" />
+        </svg>
+      </button>
+      <button class="ib" aria-label="Terminal">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 8l5 4-5 4M13 17h6" />
+        </svg>
+      </button>
+      <button class="ib" aria-label="Download">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 4v11M7 11l5 5 5-5M5 20h14" />
+        </svg>
+      </button>
+      <button class="ib" aria-label="Browser">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" />
+        </svg>
+      </button>
+      <button class="ib" aria-label="Files">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        </svg>
+      </button>
+    </header>
+
+
+    <div class="body no-r" id="body">
+      <aside class="left" style="width: 260px;">
+        <div id="nav">
+
+          <a class="nav" data-nav="0" href="index.html"><svg viewBox="0 0 24 24">
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>Материали</a>
+
+          <a class="nav" data-nav="1" href="books.html"><svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="M20 20l-4-4"></path>
+            </svg>Учебници</a>    
+
+            <button class="nav" data-nav="2"><svg viewBox="0 0 24 24">
+              <rect x="6" y="3" width="12" height="18" rx="2"></rect>
+              <path d="M3 7v12a2 2 0 002 2"></path>
+            </svg>Нормативна уредба</button><button class="nav" data-nav="3"><svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M12 7v5l3 2"></path>
+            </svg>Scheduled</button><button class="nav" data-nav="4"><svg viewBox="0 0 24 24">
+              <rect x="3" y="8" width="18" height="12" rx="2"></rect>
+              <path d="M9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"></path>
+            </svg>Customize</button>
+        </div>
+
+        <div id="pinned">
+          <div class="label">Pinned <svg viewBox="0 0 24 24">
+              <path d="M6 9l6 6 6-6"></path>
+            </svg></div><button class="nav pin on"><svg viewBox="0 0 24 24">
+              <path d="M9 7l-5 5 5 5M15 7l5 5-5 5"></path>
+            </svg>Book library</button><button class="nav pin"><svg viewBox="0 0 24 24">
+              <path d="M9 7l-5 5 5 5M15 7l5 5-5 5"></path>
+            </svg>Channel scripts</button>
+        </div>
+
+      </aside>
+
+      <main>
+        <div class="scroll">
+          <div class="lib" id="lib"></div>
+        </div>
+      </main>
+
+      <aside class="right" id="right">
+
+        <div class="sec">
+          <button class="head">Environment
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+          </button>
+          <div class="content">
+            <div class="rw">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="3.5" width="11" height="7" rx="1"/><path d="M1.5 12.5h13"/></svg>
+              <span class="k">This computer</span><span class="link">Save</span>
+            </div>
+            <div class="rw">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 4.5a1 1 0 0 1 1-1h3.2l1.4 1.5h6.4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1z"/></svg>
+              <span class="k">arclayer-studio <span class="v">· E:</span></span>
+            </div>
+            <div class="rw">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="4.5" y="1.5" width="7" height="13" rx="1.5"/><path d="M7 12.5h2"/></svg>
+              <span class="k">Remote Control</span>
+              <button class="switch on" role="switch" aria-checked="true" aria-label="Remote control"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <button class="head">Context
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+          </button>
+          <div class="content">
+            <div class="total"><span>9% used</span><span style="color:var(--dim)">92k / 1M</span></div>
+            <div class="meter">
+              <i style="background:#6ea8fe;width:4.08%"></i>
+              <i style="background:#a78bfa;width:6.12%"></i>
+              <i style="background:#4ade80;width:17.68%"></i>
+              <i style="background:#f5a524;width:3.4%"></i>
+            </div>
+            <div class="leg"><i style="background:#6ea8fe"></i><span class="k">System prompt</span><span class="n">12k</span><span class="p">1.2%</span></div>
+            <div class="leg"><i style="background:#a78bfa"></i><span class="k">Tools</span><span class="n">18k</span><span class="p">1.8%</span></div>
+            <div class="leg"><i style="background:#4ade80"></i><span class="k">Messages</span><span class="n">52k</span><span class="p">5.2%</span></div>
+            <div class="leg"><i style="background:#f5a524"></i><span class="k">Files</span><span class="n">10k</span><span class="p">1.0%</span></div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <button class="head">Connectors
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+          </button>
+          <div class="content">
+            <div class="rw"><span class="cn">G</span><span class="k">Google Drive</span><span class="ok">Connected</span></div>
+            <div class="rw"><span class="cn">N</span><span class="k">Notion</span><span class="ok">Connected</span></div>
+            <div class="rw"><span class="cn">GH</span><span class="k">GitHub</span><span class="auth">Authenticate</span></div>
+          </div>
+        </div>
+
+        <div class="sec closed">
+          <button class="head">Outputs
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+          </button>
+          <div class="content"><div class="rw"><span class="v">Nothing yet</span></div></div>
+        </div>        
+      </aside>
+    </div>
+  </div>
+  <script src="script/index_collection.js"></script>
+  <script src="script/index_app.js"></script>
+</body>
+
+</html>

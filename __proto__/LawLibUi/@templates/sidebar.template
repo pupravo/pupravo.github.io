@@ -1,0 +1,34 @@
+<aside class="left" style="width: 260px;">
+    <div id="nav">
+
+        <a class="nav" data-nav="0" href="index.html"><svg viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12h14"></path>
+        </svg>Материали</a>
+
+        <a class="nav" data-nav="1" href="books.html"><svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M20 20l-4-4"></path>
+        </svg>Учебници</a>    
+
+        <button class="nav" data-nav="2"><svg viewBox="0 0 24 24">
+            <rect x="6" y="3" width="12" height="18" rx="2"></rect>
+            <path d="M3 7v12a2 2 0 002 2"></path>
+        </svg>Artifacts</button><button class="nav" data-nav="3"><svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7v5l3 2"></path>
+        </svg>Scheduled</button><button class="nav" data-nav="4"><svg viewBox="0 0 24 24">
+            <rect x="3" y="8" width="18" height="12" rx="2"></rect>
+            <path d="M9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"></path>
+        </svg>Customize</button>
+    </div>
+
+    <div id="pinned">
+        <div class="label">Pinned <svg viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6"></path>
+        </svg></div><button class="nav pin on"><svg viewBox="0 0 24 24">
+            <path d="M9 7l-5 5 5 5M15 7l5 5-5 5"></path>
+        </svg>Book library</button><button class="nav pin"><svg viewBox="0 0 24 24">
+            <path d="M9 7l-5 5 5 5M15 7l5 5-5 5"></path>
+        </svg>Channel scripts</button>
+    </div>
+</aside>
